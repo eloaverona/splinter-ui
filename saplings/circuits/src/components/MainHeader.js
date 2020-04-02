@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import ProposeCircuitButton from './ProposeCircuitButton.js';
+import ProposeCircuitButton from './ProposeCircuitButton';
 import './MainHeader.scss';
 
 const MainHeader = () => {
@@ -24,7 +24,7 @@ const MainHeader = () => {
         <div>
           <h4 className="circuits-title">Circuits</h4>
         </div>
-        <ProposeCircuitButton></ProposeCircuitButton>
+        <ProposeCircuitButton />
     </div>
   )
 }

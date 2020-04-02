@@ -16,22 +16,23 @@
 
 import React from 'react';
 import './App.css';
-import MainHeader from './components/MainHeader.js';
-import Content from './components/Content.js';
-
-import { library } from '@fortawesome/fontawesome-svg-core';
-
 import {
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+import MainHeader from './components/MainHeader';
+import Content from './components/Content';
+
+
 
 library.add(faPlus);
 
 function App() {
   return (
     <div className="circuits-app">
-        <MainHeader></MainHeader>
-        <Content></Content>
+        <MainHeader />
+        <Content />
     </div>
 
   );
