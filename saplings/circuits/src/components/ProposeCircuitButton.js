@@ -23,7 +23,10 @@ const ProposeCircuitButton = () => {
   const plusSign = <span className="add-sign"> <FontAwesomeIcon icon="plus"/></span>;
 
   return (
-    <button type="button" className="propose-circuit-btn">{plusSign}<span className="btn-text">Propose New Circuit</span></button>
+    <button type="button" className="propose-circuit-btn">
+      {plusSign}
+      <span className="btn-text">Propose New Circuit</span>
+    </button>
   )
 }
 
