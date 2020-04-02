@@ -21,12 +21,12 @@ import './MainHeader.scss';
 const MainHeader = () => {
   return (
     <div className="main-header">
-        <div>
-          <h4 className="circuits-title">Circuits</h4>
-        </div>
-        <ProposeCircuitButton />
+      <div>
+        <h4 className="circuits-title">Circuits</h4>
+      </div>
+      <ProposeCircuitButton />
     </div>
-  )
-}
+  );
+};
 
 export default MainHeader;

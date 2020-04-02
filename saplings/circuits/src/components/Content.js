@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
- import React from 'react';
- import './Content.scss';
+import React from 'react';
+import './Content.scss';
 
- const Content = () => {
-   return (
-     <div className="content">
-         <div>
-           <div className="circuit-stats">
-             <div className="stat total-circuits"><span className="stat-count circuits-count">24</span> Total circuits </div>
-             <div className="stat action-required"><span className="stat-count action-required-count">2</span> Action Required </div>
-           </div>
-         </div>
-     </div>
-   )
- }
+const Content = () => {
+  return (
+    <div className="content">
+      <div>
+        <div className="circuit-stats">
+          <div className="stat total-circuits">
+            <span className="stat-count circuits-count">24</span>
+            Total circuits
+          </div>
+          <div className="stat action-required">
+            <span className="stat-count action-required-count">2</span>
+            Action Required
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
- export default Content;
+export default Content;

@@ -18,16 +18,20 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './ProposeCircuitButton.scss';
 
-
 const ProposeCircuitButton = () => {
-  const plusSign = <span className="add-sign"> <FontAwesomeIcon icon="plus"/></span>;
+  const plusSign = (
+    <span className="add-sign">
+      {' '}
+      <FontAwesomeIcon icon="plus" />
+    </span>
+  );
 
   return (
     <button type="button" className="propose-circuit-btn">
       {plusSign}
       <span className="btn-text">Propose New Circuit</span>
     </button>
-  )
-}
+  );
+};
 
 export default ProposeCircuitButton;
