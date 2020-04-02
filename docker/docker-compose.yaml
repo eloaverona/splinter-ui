@@ -1,0 +1,107 @@
+# Copyright 2020 Cargill Incorporated
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+version: '3.6'
+
+volumes:
+  contracts:
+  key-registry:
+
+services:
+
+  splinter-ui:
+    build:
+      context: ..
+      dockerfile: splinter-ui/Dockerfile
+      args:
+        REPO_VERSION: ${REPO_VERSION}
+        REACT_APP_SPLINTER_URL: '/splinterd'
+        REACT_APP_SAPLING_URL: '/sapling-dev-server'
+        SPLINTER_URL: 'http://splinterd:8085'
+        SAPLING_URL: ' http://sapling-dev-server:80'
+    image: splinter-ui
+    container_name: splinter-ui
+    expose:
+      - 80
+    ports:
+      - '3030:80'
+
+  splinterd:
+    image: splintercommunity/splinterd:experimental
+    container_name: splinterd
+    hostname: splinterd
+    expose:
+      - 8044
+      - 8085
+    ports:
+      - "8044:8044"
+      - "8085:8085"
+    volumes:
+      - contracts:/usr/share/scar
+      - key-registry:/key_registry
+      - ./configs:/configs
+    entrypoint: |
+      bash -c "
+        while [ ! -f /key_registry/keys.yaml ]; do \
+          echo 'waiting for key registry'; \
+          sleep 1; \
+        done && \
+        until PGPASSWORD=admin psql -h splinter-db -U admin -d splinter -c '\q'; do
+          >&2 echo \"Database is unavailable - sleeping\"
+          sleep 1
+        done
+        cp /key_registry/keys.yaml /var/lib/splinter && \
+        if [ ! -f /etc/splinter/certs/private/server.key ]
+        then
+          splinter-cli cert generate --force
+        fi && \
+        splinter database migrate -C postgres://admin:admin@splinter-db:5432/splinter && \
+        splinterd -vv \
+        --registry-backend FILE \
+        --registry-file /configs/nodes.yaml \
+        --bind 0.0.0.0:8085 \
+        --network-endpoint 0.0.0.0:8044 \
+        --node-id alpha-node-000 \
+        --service-endpoint 0.0.0.0:8043 \
+        --storage yaml \
+        --transport tls \
+        --client-cert /etc/splinter/certs/client.crt \
+        --client-key /etc/splinter/certs/private/client.key \
+        --server-cert /etc/splinter/certs/server.crt \
+        --server-key /etc/splinter/certs/private/server.key \
+        --enable-biome \
+        --database postgres://admin:admin@splinter-db:5432/splinter \
+        --insecure
+      "
+  splinter-db:
+    image: postgres
+    container_name: splinter-db
+    restart: always
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: splinter
+
+  sapling-dev-server:
+    build:
+      context: ..
+      dockerfile: sapling-dev-server/Dockerfile
+    container_name: sapling-dev-server
+    expose:
+      - 80
+    ports:
+      - '3031:80'
