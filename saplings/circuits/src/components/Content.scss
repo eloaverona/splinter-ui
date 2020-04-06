@@ -17,32 +17,44 @@
  .content {
    color: var(--color-dark-grey);
    display: flex;
-   flex-direction: row;
+   flex-direction: column;
    margin: 3rem;
 
-   .circuit-stats {
+   .midContent {
      display: flex;
      flex-direction: row;
-     justify-content: space-around;
 
-     .stat {
+     .filterTable {
+       border: none;
+       border-bottom: 1px solid var(--color-grey);
+       padding: none;
+       padding-left: 1rem;
+     }
+
+     .circuit-stats {
        display: flex;
-       margin-right: 2rem;
        flex-direction: row;
-       justify-content: space-between;;
-       align-items: center;
+       justify-content: space-around;
 
-       .stat-count {
-         font-size: 2rem;
-         margin-right: 0.5rem;
-       }
+       .stat {
+         display: flex;
+         margin-right: 2rem;
+         flex-direction: row;
+         justify-content: space-between;;
+         align-items: center;
 
-       .circuits-count {
-         color: var(--color-secondary);
-       }
+         .stat-count {
+           font-size: 2rem;
+           margin-right: 0.5rem;
+         }
 
-       .action-required-count {
-         color: var(--color-attention);
+         .circuits-count {
+           color: var(--color-secondary);
+         }
+
+         .action-required-count {
+           color: var(--color-attention);
+         }
        }
      }
    }

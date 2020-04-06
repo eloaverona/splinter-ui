@@ -21,7 +21,6 @@ import './ProposeCircuitButton.scss';
 const ProposeCircuitButton = () => {
   const plusSign = (
     <span className="add-sign">
-      {' '}
       <FontAwesomeIcon icon="plus" />
     </span>
   );

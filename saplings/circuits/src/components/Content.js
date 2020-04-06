@@ -15,12 +15,13 @@
  */
 
 import React from 'react';
+
 import './Content.scss';
 
 const Content = () => {
   return (
     <div className="content">
-      <div>
+      <div className="midContent">
         <div className="circuit-stats">
           <div className="stat total-circuits">
             <span className="stat-count circuits-count">24</span>
@@ -31,6 +32,7 @@ const Content = () => {
             Action Required
           </div>
         </div>
+        <input className="filterTable" type="text" placeholder="Filter" />
       </div>
     </div>
   );
