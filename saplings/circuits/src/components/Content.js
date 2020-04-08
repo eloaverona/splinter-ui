@@ -15,20 +15,31 @@
  */
 
 import React from 'react';
+import mockCircuits from '../mockData/mockCircuits';
+import mockProposals from '../mockData/mockProposals';
 
 import './Content.scss';
 
 const Content = () => {
+  const localNodeId = 'beta-node-000';
+  const totalCircuits = mockCircuits.length + mockProposals.length;
+  const actionRequired = mockProposals.filter(
+    proposal =>
+      proposal.votes.filter(vote => vote.voter_node_id === localNodeId) // local node has a vote
+        .length === 0
+  ).length;
   return (
     <div className="content">
       <div className="midContent">
         <div className="circuit-stats">
           <div className="stat total-circuits">
-            <span className="stat-count circuits-count">24</span>
+            <span className="stat-count circuits-count">{totalCircuits}</span>
             Total circuits
           </div>
           <div className="stat action-required">
-            <span className="stat-count action-required-count">2</span>
+            <span className="stat-count action-required-count">
+              {actionRequired}
+            </span>
             Action Required
           </div>
         </div>
