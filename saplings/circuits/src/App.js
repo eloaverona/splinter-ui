@@ -20,6 +20,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 import MainHeader from './components/MainHeader';
+import { LocalNodeProvider } from './state/localNode';
+
 import Content from './components/Content';
 
 library.add(faPlus);
@@ -27,8 +29,10 @@ library.add(faPlus);
 function App() {
   return (
     <div className="circuits-app">
-      <MainHeader />
-      <Content />
+      <LocalNodeProvider>
+        <MainHeader />
+        <Content />
+      </LocalNodeProvider>
     </div>
   );
 }

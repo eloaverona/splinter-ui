@@ -17,28 +17,16 @@
 import React from 'react';
 import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
-import { getNodeID } from '../api/splinter';
+import { useLocalNodeState } from '../state/localNode';
 
 import './Content.scss';
 
 const Content = () => {
-  // const localNodeId = await getNodeID();
-  const localNodeId = async () => {
-    try {
-      const nodeId = await getNodeID();
-      return nodeId;
-    } catch (e) {
-      console.error(`Error listing services: ${e}`);
-    }
-    return 'nodeID';
-  };
-  console.log(`nodeID: ${localNodeId}`);
-
+  const nodeID = useLocalNodeState();
   const totalCircuits = mockCircuits.length + mockProposals.length;
   const actionRequired = mockProposals.filter(
     proposal =>
-      proposal.votes.filter(vote => vote.voter_node_id === localNodeId) // local node has a vote
-        .length === 0
+      proposal.votes.filter(vote => vote.voter_node_id === nodeID).length === 0
   ).length;
   return (
     <div className="content">
