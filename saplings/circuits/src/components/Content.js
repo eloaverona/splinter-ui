@@ -17,11 +17,23 @@
 import React from 'react';
 import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
+import { getNodeID } from '../api/splinter';
 
 import './Content.scss';
 
 const Content = () => {
-  const localNodeId = 'beta-node-000';
+  // const localNodeId = await getNodeID();
+  const localNodeId = async () => {
+    try {
+      const nodeId = await getNodeID();
+      return nodeId;
+    } catch (e) {
+      console.error(`Error listing services: ${e}`);
+    }
+    return 'nodeID';
+  };
+  console.log(`nodeID: ${localNodeId}`);
+
   const totalCircuits = mockCircuits.length + mockProposals.length;
   const actionRequired = mockProposals.filter(
     proposal =>
