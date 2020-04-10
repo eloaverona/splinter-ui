@@ -27,10 +27,14 @@ RUN git clone https://github.com/hyperledger/grid
 
 RUN cp -r grid/grid-ui/saplings/register-login /saplings
 
+ARG PUBLIC_URL_PARTIAL
+
+ENV PUBLIC_URL $PUBLIC_URL_PARTIAL
 RUN cd /saplings/register-login && \
   npm install && \
   yarn deploy
 
+ENV PUBLIC_URL ${PUBLIC_URL_PARTIAL}/circuits
 RUN cd /saplings/circuits && \
   npm install && \
   yarn deploy
