@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 import mockCircuits from '../mockData/mockCircuits';
@@ -23,30 +23,40 @@ import mockProposals from '../mockData/mockProposals';
 import { useLocalNodeState } from '../state/localNode';
 import { processCircuits, Circuit } from '../data/processCircuits';
 
-const CircuitsTable = () => {
-  const circuits = processCircuits(mockCircuits.concat(mockProposals));
-  console.log("PROCCESSED CIRCUITS");
-  console.log(circuits);
-  return (
-    <table>
-      <TableHeader />
-      {circuits.map(item => {
-        return <TableRow circuit={item} />;
-      })}
-    </table>
-  );
+const sortCircuits = (state, action) => {
+  switch (action.type) {
+    case 'alias': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.comments < circuitB.comments) {
+          return -1;
+        }
+        if (circuitA.comments > circuitB.comments) {
+          return 1;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
 };
 
-const TableHeader = () => {
+const TableHeader = ({ sort }) => {
   return (
     <tr>
-      <th>Alias</th>
+      <th onClick={() => sort({ type: 'alias', order: 'asc' })}>Alias</th>
       <th>Circuit ID</th>
       <th>Count of services</th>
       <th>Management Type</th>
       <th>Status</th>
     </tr>
   );
+};
+
+TableHeader.propTypes = {
+  sort: PropTypes.func.isRequired
 };
 
 const proposalStatus = (circuit, nodeID) => {
@@ -65,10 +75,6 @@ const proposalStatus = (circuit, nodeID) => {
 
 const TableRow = ({ circuit }) => {
   const nodeID = 'beta-node-000'; //useLocalNodeState();
-
-  console.log("DATAA");
-  console.log(circuit);
-
   return (
     <tr>
       <td>{circuit.comments}</td>
@@ -84,6 +90,24 @@ const TableRow = ({ circuit }) => {
 
 TableRow.propTypes = {
   circuit: PropTypes.instanceOf(Circuit).isRequired
+};
+
+const CircuitsTable = () => {
+  const circuits = processCircuits(mockCircuits.concat(mockProposals));
+  const [circuitState, circuitsDispatch] = useReducer(sortCircuits, {
+    circuits
+  });
+
+  return (
+    <div>
+      <table>
+        <TableHeader sort={circuitsDispatch} />
+        {circuitState.circuits.map(item => {
+          return <TableRow circuit={item} />;
+        })}
+      </table>
+    </div>
+  );
 };
 
 export default CircuitsTable;

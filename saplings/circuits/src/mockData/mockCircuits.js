@@ -42,6 +42,7 @@ export default [
         }
       }
     ],
-    management_type: 'gameroom'
+    management_type: 'gameroom',
+    application_metadata: ''
   }
 ];
