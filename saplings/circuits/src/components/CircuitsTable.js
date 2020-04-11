@@ -21,10 +21,24 @@ import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
 
 import { useLocalNodeState } from '../state/localNode';
+import { processCircuits, Circuit } from '../data/processCircuits';
 
 const CircuitsTable = () => {
-  const circuits = mockCircuits.concat(mockProposals);
-  const tableHeader = (
+  const circuits = processCircuits(mockCircuits.concat(mockProposals));
+  console.log("PROCCESSED CIRCUITS");
+  console.log(circuits);
+  return (
+    <table>
+      <TableHeader />
+      {circuits.map(item => {
+        return <TableRow circuit={item} />;
+      })}
+    </table>
+  );
+};
+
+const TableHeader = () => {
+  return (
     <tr>
       <th>Alias</th>
       <th>Circuit ID</th>
@@ -33,50 +47,43 @@ const CircuitsTable = () => {
       <th>Status</th>
     </tr>
   );
+};
 
+const proposalStatus = (circuit, nodeID) => {
+  const awaiting = <span className="awaiting-approval">Awaiting Approval</span>;
   return (
-    <table>
-      {tableHeader}
-      {circuits.map(item => {
-        return <TableRow data={item} />;
-      })}
-    </table>
+    <div className="proposalStatus">
+      {awaiting}
+      {circuit.actionRequired(nodeID) ? (
+        <span className="action-required">Action Required</span>
+      ) : (
+        ''
+      )}
+    </div>
   );
 };
 
-const proposalStatus = (votes, nodeID) => {
-  const awaiting = <span className="awaiting-approval">Awaiting Approval</span>;
-  if (votes.filter(vote => vote.voter_node_id === nodeID).length === 0) {
-    return (
-      <div className="proposalStatus">
-        {awaiting}
-        <span className="action-required">Action Required</span>
-      </div>
-    );
-  }
-  return <div className="proposalStatus">{awaiting}</div>;
-}
-
-const TableRow = ({ data }) => {
+const TableRow = ({ circuit }) => {
   const nodeID = 'beta-node-000'; //useLocalNodeState();
+
+  console.log("DATAA");
+  console.log(circuit);
 
   return (
     <tr>
-      <td>{data.circuit ? data.circuit.comments : 'N/A'}</td>
-      <td>{data.circuit_id ? data.circuit_id : data.id}</td>
-      <td>{data.circuit ? data.circuit.roster.length : data.roster.length}</td>
+      <td>{circuit.comments}</td>
+      <td>{circuit.id}</td>
+      <td>{circuit.roster.length}</td>
+      <td>{circuit.management_type}</td>
       <td>
-        {data.circuit ? data.circuit.management_type : data.management_type}
+        {circuit.awaitingApproval() ? proposalStatus(circuit, nodeID) : ''}
       </td>
-      <td>{data.circuit ? proposalStatus(data.votes, nodeID) : ''}</td>
     </tr>
   );
 };
 
 TableRow.propTypes = {
-  data: PropTypes.object.isRequired
+  circuit: PropTypes.instanceOf(Circuit).isRequired
 };
-
-
 
 export default CircuitsTable;
