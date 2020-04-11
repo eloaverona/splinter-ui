@@ -20,13 +20,13 @@ function Circuit(data) {
     this.status = 'Pending';
     this.members = data.circuit.members;
     this.roster = data.circuit.roster;
-    this.management_type = data.circuit.management_type;
-    this.application_metadata = data.circuit.application_metadata;
+    this.managementType = data.circuit.management_type;
+    this.applicationMetadata = data.circuit.application_metadata;
     this.comments = data.circuit.comments;
     this.proposal = {
       votes: data.votes,
       requester: data.requester,
-      requester_node_id: data.requester_node_id,
+      requesterNodeID: data.requester_node_id,
       proposalType: data.proposal_type
     };
   } else {
@@ -34,8 +34,8 @@ function Circuit(data) {
     this.status = 'Active';
     this.members = data.members;
     this.roster = data.roster;
-    this.management_type = data.management_type;
-    this.application_metadata = data.application_metadata;
+    this.managementType = data.management_type;
+    this.applicationMetadata = data.application_metadata;
     this.comments = 'N/A';
     this.proposal = {};
   }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
@@ -23,15 +24,55 @@ import mockProposals from '../mockData/mockProposals';
 import { useLocalNodeState } from '../state/localNode';
 import { processCircuits, Circuit } from '../data/processCircuits';
 
-const sortCircuits = (state, action) => {
+const sortCircuitsReducer = (state, action) => {
+  const order = action.orderAsc ? -1 : 1;
   switch (action.type) {
-    case 'alias': {
+    case 'comments': {
       const sorted = state.circuits.sort((circuitA, circuitB) => {
         if (circuitA.comments < circuitB.comments) {
-          return -1;
+          return order;
         }
         if (circuitA.comments > circuitB.comments) {
-          return 1;
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    case 'circuitID': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.id < circuitB.id) {
+          return order;
+        }
+        if (circuitA.id > circuitB.id) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    case 'serviceCount': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.roster.length < circuitB.roster.length) {
+          return order;
+        }
+        if (circuitA.roster.length > circuitB.roster.length) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    case 'managementType': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.managementType < circuitB.managementType) {
+          return order;
+        }
+        if (circuitA.managementType > circuitB.managementType) {
+          return -order;
         }
         return 0;
       });
@@ -44,12 +85,54 @@ const sortCircuits = (state, action) => {
 };
 
 const TableHeader = ({ sort }) => {
+  const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
+  const sortCircuits = sortBy => {
+    setSortedAsc({ asc: !sorted.asc, field: sortBy });
+    sort({ type: sortBy, orderAsc: sorted.asc });
+  };
+
+  const caretDown = (
+    <span className="caret">
+      <FontAwesomeIcon icon="caret-down" />
+    </span>
+  );
+
+  const caretUp = (
+    <span className="caret">
+      <FontAwesomeIcon icon="caret-up" />
+    </span>
+  );
+
+  const circle = <span className="caret">●</span>;
+
+  const sortSymbol = fieldType => {
+    if (sorted.field !== fieldType) {
+      return circle;
+    }
+    if (sorted.asc) {
+      return caretUp;
+    }
+    return caretDown;
+  };
+
   return (
     <tr>
-      <th onClick={() => sort({ type: 'alias', order: 'asc' })}>Alias</th>
-      <th>Circuit ID</th>
-      <th>Count of services</th>
-      <th>Management Type</th>
+      <th onClick={() => sortCircuits('comments')}>
+        Comments
+        {sortSymbol('comments')}
+      </th>
+      <th onClick={() => sortCircuits('circuitID')}>
+        Circuit ID
+        {sortSymbol('circuitID')}
+      </th>
+      <th onClick={() => sortCircuits('serviceCount')}>
+        Service count
+        {sortSymbol('serviceCount')}
+      </th>
+      <th onClick={() => sortCircuits('managementType')}>
+        Management Type
+        {sortSymbol('managementType')}
+      </th>
       <th>Status</th>
     </tr>
   );
@@ -80,7 +163,7 @@ const TableRow = ({ circuit }) => {
       <td>{circuit.comments}</td>
       <td>{circuit.id}</td>
       <td>{circuit.roster.length}</td>
-      <td>{circuit.management_type}</td>
+      <td>{circuit.managementType}</td>
       <td>
         {circuit.awaitingApproval() ? proposalStatus(circuit, nodeID) : ''}
       </td>
@@ -94,7 +177,7 @@ TableRow.propTypes = {
 
 const CircuitsTable = () => {
   const circuits = processCircuits(mockCircuits.concat(mockProposals));
-  const [circuitState, circuitsDispatch] = useReducer(sortCircuits, {
+  const [circuitState, circuitsDispatch] = useReducer(sortCircuitsReducer, {
     circuits
   });
 
