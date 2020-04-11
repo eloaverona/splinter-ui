@@ -18,6 +18,7 @@ import React from 'react';
 import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
 import { useLocalNodeState } from '../state/localNode';
+import CircuitsTable from './CircuitsTable';
 
 import './Content.scss';
 
@@ -45,6 +46,7 @@ const Content = () => {
         </div>
         <input className="filterTable" type="text" placeholder="Filter" />
       </div>
+      <CircuitsTable />
     </div>
   );
 };
