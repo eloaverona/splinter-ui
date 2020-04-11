@@ -15,9 +15,12 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
+
+import { useLocalNodeState } from '../state/localNode';
 
 const CircuitsTable = () => {
   const circuits = mockCircuits.concat(mockProposals);
@@ -34,31 +37,29 @@ const CircuitsTable = () => {
   return (
     <table>
       {tableHeader}
-      {circuits.map(function(item) {
-        return <TableRow circuit={item} />;
+      {circuits.map(item => {
+        return <TableRow data={item} />;
       })}
     </table>
   );
-  // const tableRow = (circuit) => {
-  //
-  // };
 };
 
-const TableRow = props => {
-  const data = props.circuit;
-  // const tableHeader = (
-  //   <tr>
-  //     <th>Alias</th>
-  //     <th>Circuit ID</th>
-  //     <th>Count of services</th>
-  //     <th>Management Type</th>
-  //     <th>Status</th>
-  //   </tr>
-  // );
-  //
-  console.log('DATA');
+const proposalStatus = (votes, nodeID) => {
+  const awaiting = <span className="awaiting-approval">Awaiting Approval</span>;
+  if (votes.filter(vote => vote.voter_node_id === nodeID).length === 0) {
+    return (
+      <div className="proposalStatus">
+        {awaiting}
+        <span className="action-required">Action Required</span>
+      </div>
+    );
+  }
+  return <div className="proposalStatus">{awaiting}</div>;
+}
 
-  console.log(data);
+const TableRow = ({ data }) => {
+  const nodeID = 'beta-node-000'; //useLocalNodeState();
+
   return (
     <tr>
       <td>{data.circuit ? data.circuit.comments : 'N/A'}</td>
@@ -67,12 +68,15 @@ const TableRow = props => {
       <td>
         {data.circuit ? data.circuit.management_type : data.management_type}
       </td>
-      <td>{data.circuit ? 'Awaiting Approval' : ''}</td>
+      <td>{data.circuit ? proposalStatus(data.votes, nodeID) : ''}</td>
     </tr>
   );
-  // const tableRow = (circuit) => {
-  //
-  // };
 };
+
+TableRow.propTypes = {
+  data: PropTypes.object.isRequired
+};
+
+
 
 export default CircuitsTable;
