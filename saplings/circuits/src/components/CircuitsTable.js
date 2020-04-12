@@ -145,15 +145,25 @@ TableHeader.propTypes = {
 };
 
 const proposalStatus = (circuit, nodeID) => {
-  const awaiting = <span className="awaiting-approval">Awaiting Approval</span>;
+  const exclamation = (
+    <span className="status-icon">
+      <FontAwesomeIcon icon="exclamation" />
+    </span>
+  );
+  const awaiting = (
+    <span className="status awaiting-approval">Awaiting Approval</span>
+  );
   return (
-    <div className="proposalStatus">
-      {awaiting}
+    <div className="proposal-status">
       {circuit.actionRequired(nodeID) ? (
-        <span className="action-required">Action Required</span>
+        <span className="status action-required">
+          Action Required
+          {exclamation}
+        </span>
       ) : (
         ''
       )}
+      {awaiting}
     </div>
   );
 };
@@ -162,8 +172,10 @@ const TableRow = ({ circuit }) => {
   const nodeID = 'beta-node-000'; //useLocalNodeState();
   return (
     <tr className="table-row">
-      <td>{circuit.comments}</td>
-      <td>{circuit.id}</td>
+      <td className={circuit.comments === 'N/A' ? 'text-grey' : ''}>
+        {circuit.comments}
+      </td>
+      <td className="text-highlight">{circuit.id}</td>
       <td>{circuit.roster.length}</td>
       <td>{circuit.managementType}</td>
       <td>

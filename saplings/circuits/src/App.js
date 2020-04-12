@@ -19,7 +19,8 @@ import './App.css';
 import {
   faPlus,
   faCaretUp,
-  faCaretDown
+  faCaretDown,
+  faExclamation
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -28,7 +29,7 @@ import { LocalNodeProvider } from './state/localNode';
 
 import Content from './components/Content';
 
-library.add(faPlus, faCaretUp, faCaretDown);
+library.add(faPlus, faCaretUp, faCaretDown, faExclamation);
 
 function App() {
   return (
