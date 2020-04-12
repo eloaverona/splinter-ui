@@ -24,6 +24,8 @@ import mockProposals from '../mockData/mockProposals';
 import { useLocalNodeState } from '../state/localNode';
 import { processCircuits, Circuit } from '../data/processCircuits';
 
+import './CircuitsTable.scss';
+
 const sortCircuitsReducer = (state, action) => {
   const order = action.orderAsc ? -1 : 1;
   switch (action.type) {
@@ -116,7 +118,7 @@ const TableHeader = ({ sort }) => {
   };
 
   return (
-    <tr>
+    <tr className="table-header">
       <th onClick={() => sortCircuits('comments')}>
         Comments
         {sortSymbol('comments')}
@@ -159,7 +161,7 @@ const proposalStatus = (circuit, nodeID) => {
 const TableRow = ({ circuit }) => {
   const nodeID = 'beta-node-000'; //useLocalNodeState();
   return (
-    <tr>
+    <tr className="table-row">
       <td>{circuit.comments}</td>
       <td>{circuit.id}</td>
       <td>{circuit.roster.length}</td>
@@ -183,7 +185,7 @@ const CircuitsTable = () => {
 
   return (
     <div>
-      <table>
+      <table className="circuits-table">
         <TableHeader sort={circuitsDispatch} />
         {circuitState.circuits.map(item => {
           return <TableRow circuit={item} />;
