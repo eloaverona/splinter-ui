@@ -18,7 +18,9 @@ function Circuit(data) {
   if (data.proposal_type) {
     this.id = data.circuit_id;
     this.status = 'Pending';
-    this.members = data.circuit.members;
+    this.members = data.circuit.members.map(member => {
+      return member.node_id;
+    });
     this.roster = data.circuit.roster;
     this.managementType = data.circuit.management_type;
     this.applicationMetadata = data.circuit.application_metadata;

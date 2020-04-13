@@ -48,15 +48,39 @@ const circuitsReducer = (state, action) => {
 };
 
 const filterCircuits = (circuits, filterBy) => {
+  if (filterBy.filterTerm.length === 0) {
+    return circuits;
+  }
   const filteredCircuits = circuits.filter(circuit => {
-    if (filterBy.filterTerm.length === 0) {
-      return circuits;
+    console.log("CIRCUIT TO BE FILTERED");
+
+    console.log(circuit);
+    if (circuit.id.toLowerCase().indexOf(filterBy.filterTerm) > -1) {
+      return true;
     }
-    return (
-      Object.keys(circuit).filter(key => {
-        return circuit.id.toLowerCase().indexOf(filterBy.filterTerm) > -1;
-      }).length > 0
-    );
+    if (
+      circuit.managementType.toLowerCase().indexOf(filterBy.filterTerm) > -1
+    ) {
+      return true;
+    }
+    if (circuit.comments.toLowerCase().indexOf(filterBy.filterTerm) > -1) {
+      return true;
+    }
+    if (
+      circuit.member.filter(
+        member => member.toLowerCase().indexOf(filterBy.filterTerm) > -1
+      ).length > 0
+    ) {
+      return true;
+    }
+    if (
+      circuit.roster.filter(
+        service => service.service_type.indexOf(filterBy.filterTerm) > -1
+      ).length > 0
+    ) {
+      return true;
+    }
+    return false;
   });
 
   return filteredCircuits;
