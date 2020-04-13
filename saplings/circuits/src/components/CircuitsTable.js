@@ -83,9 +83,10 @@ const sortCircuits = (circuits, action) => {
   }
 };
 
-const TableHeader = ({ dispatch }) => {
+const TableHeader = ({ dispatch, circuits }) => {
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
   const sortCircuitsBy = (sortBy, order) => {
+    console.log("CALLED");
     setSortedAsc({ asc: order, field: sortBy });
     dispatch({
       type: 'sort',
@@ -94,9 +95,9 @@ const TableHeader = ({ dispatch }) => {
     });
   };
 
-  // useEffect(() => {
-  //   sortCircuitsBy(sorted.field, sorted.asc);
-  // });
+  useEffect(() => {
+    sortCircuitsBy(sorted.field, sorted.asc);
+  }, [circuits]);
 
   const caretDown = (
     <span className="caret">
@@ -146,7 +147,8 @@ const TableHeader = ({ dispatch }) => {
 };
 
 TableHeader.propTypes = {
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  circuits: PropTypes.arrayOf(Circuit).isRequired
 };
 
 const proposalStatus = (circuit, nodeID) => {
@@ -198,7 +200,7 @@ const CircuitsTable = ({ circuits, dispatch }) => {
   return (
     <div>
       <table className="circuits-table">
-        <TableHeader dispatch={dispatch} />
+        <TableHeader dispatch={dispatch} circuits={circuits} />
         {circuits.map(item => {
           return <TableRow circuit={item} />;
         })}

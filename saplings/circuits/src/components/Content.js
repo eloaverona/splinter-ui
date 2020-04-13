@@ -25,6 +25,8 @@ import CircuitsTable from './CircuitsTable';
 import './Content.scss';
 
 const circuitsReducer = (state, action) => {
+  console.log("GOT TO CIRCUITSREDUCER!");
+  console.log(action);
   switch (action.type) {
     case 'sort': {
       const sortedCircuits = action.sortCircuits(
@@ -45,10 +47,19 @@ const circuitsReducer = (state, action) => {
   }
 };
 
-const filterCircuits = event => {
-  console.log("EVENT!");
+const filterCircuits = (circuits, filterBy) => {
+  const filteredCircuits = circuits.filter(circuit => {
+    if (filterBy.filterTerm.length === 0) {
+      return circuits;
+    }
+    return (
+      Object.keys(circuit).filter(key => {
+        return circuit.id.toLowerCase().indexOf(filterBy.filterTerm) > -1;
+      }).length > 0
+    );
+  });
 
-  console.log(event);
+  return filteredCircuits;
 };
 
 const Content = () => {
@@ -83,7 +94,15 @@ const Content = () => {
           className="filterTable"
           type="text"
           placeholder="Filter"
-          onKeyUp={() => filterCircuits}
+          onKeyUp={event =>
+            circuitsDispatch({
+              type: 'filter',
+              filterCircuits,
+              filter: {
+                filterTerm: event.target.value.toLowerCase()
+              }
+            })
+          }
         />
       </div>
       <CircuitsTable
@@ -93,7 +112,5 @@ const Content = () => {
     </div>
   );
 };
-
-
 
 export default Content;
