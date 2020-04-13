@@ -198,7 +198,7 @@ TableRow.propTypes = {
 
 const CircuitsTable = ({ circuits, dispatch }) => {
   return (
-    <div>
+    <div className="table-container">
       <table className="circuits-table">
         <TableHeader dispatch={dispatch} circuits={circuits} />
         {circuits.map(item => {

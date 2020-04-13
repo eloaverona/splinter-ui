@@ -14,67 +14,73 @@
  * limitations under the License.
 */
 
-.circuits-table {
-  width: 100%;
+.table-container {
+  overflow:auto;
   margin-top: 3rem;
-  border-collapse: collapse;
 
-  th, td {
-    border-bottom: 1px solid var(--color-light-grey);
-    padding: 2rem 2rem 2rem 0;
-  }
+  .circuits-table {
+    width: 100%;
+    border-collapse: collapse;
 
-  .table-header th {
-    color: var(--color-grey);
-    font-weight: 100;
-    font-size: 10pt;
-    text-align: left;
-    cursor: pointer;
-    padding-bottom: 1rem;
-
-    .caret {
-      margin-left: 0.3rem;
-      font-size: 8pt;
-    }
-  }
-
-  .table-row {
-    td, .proposal-status {
-      font-size: 0.8rem;
-      vertical-align: middle;
+    th, td {
+      border-bottom: 1px solid var(--color-light-grey);
+      padding: 2rem 2rem 2rem 0;
     }
 
-    .proposal-status {
-      display: flex;
-      flex-direction: column;
+    .table-header th {
+      color: var(--color-grey);
+      font-weight: 100;
+      font-size: 10pt;
+      text-align: left;
+      cursor: pointer;
+      padding-bottom: 1rem;
+      background-color: var(--background-color-white);
+      box-shadow: 0 4px 4px -4px rgba(0,0,0,.25);
+      position: -webkit-sticky;
+      position: sticky;
+      top:0;
 
-      .status {
-        margin-top: 0.5rem;
-        font-size: inherit;
+      .caret {
+        margin-left: 0.3rem;
+        font-size: 8pt;
+      }
+    }
 
-        .status-icon {
-          margin-left: 0.5rem;
+    .table-row {
+      td, .proposal-status {
+        font-size: 0.8rem;
+        vertical-align: middle;
+      }
+
+      .proposal-status {
+        display: flex;
+        flex-direction: column;
+
+        .status {
+          margin-top: 0.5rem;
+          font-size: inherit;
+
+          .status-icon {
+            margin-left: 0.5rem;
+          }
+        }
+
+        .action-required {
+          color: var(--color-attention);
+        }
+
+        .awaiting-approval {
+          color: var(--color-secondary)
         }
       }
 
-      .action-required {
-        color: var(--color-attention);
-      }
-
-      .awaiting-approval {
+      .text-highlight {
         color: var(--color-secondary)
       }
-    }
 
-    .text-highlight {
-      color: var(--color-secondary)
-    }
-
-    .text-grey {
-      color: var(--color-light-grey)
+      .text-grey {
+        color: var(--color-light-grey)
+      }
     }
   }
-
-
-
 }

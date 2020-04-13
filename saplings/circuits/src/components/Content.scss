@@ -18,7 +18,8 @@
    color: var(--color-dark-grey);
    display: flex;
    flex-direction: column;
-   margin: 3rem;
+   margin: 2.5rem 3rem 0 3rem;
+   max-height: 75%;
 
    .midContent {
      display: flex;
@@ -83,7 +84,7 @@
           .stat-count {
             font-size: 1rem;
           }
-        }    
+        }
       }
      }
    }

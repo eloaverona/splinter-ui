@@ -44,5 +44,95 @@ export default [
     ],
     management_type: 'gameroom',
     application_metadata: ''
+  },
+  {
+    id: 'WBh1C-MIcIK',
+    members: ['alpha-node-000', 'beta-node-000'],
+    roster: [
+      {
+        service_id: 'JWrS',
+        service_type: 'scabbard',
+        allowed_nodes: ['alpha-node-000'],
+        arguments: {
+          peer_services: ['rOF6'],
+          admin_keys: [
+            '029150e180d57a8d5babde0ea6ae86193fcef7d40ae145b571b0654bf23071b169'
+          ]
+        }
+      },
+      {
+        service_id: 'rOF6',
+        service_type: 'scabbard',
+        allowed_nodes: ['beta-node-000'],
+        arguments: {
+          peer_services: ['JWrS'],
+          admin_keys: [
+            '029150e180d57a8d5babde0ea6ae86193fcef7d40ae145b571b0654bf23071b169'
+          ]
+        }
+      }
+    ],
+    management_type: 'gameroom',
+    application_metadata: ''
+  },
+  {
+    id: 'WBh1C-MIcIK',
+    members: ['alpha-node-000', 'beta-node-000'],
+    roster: [
+      {
+        service_id: 'JWrS',
+        service_type: 'scabbard',
+        allowed_nodes: ['alpha-node-000'],
+        arguments: {
+          peer_services: ['rOF6'],
+          admin_keys: [
+            '029150e180d57a8d5babde0ea6ae86193fcef7d40ae145b571b0654bf23071b169'
+          ]
+        }
+      },
+      {
+        service_id: 'rOF6',
+        service_type: 'scabbard',
+        allowed_nodes: ['beta-node-000'],
+        arguments: {
+          peer_services: ['JWrS'],
+          admin_keys: [
+            '029150e180d57a8d5babde0ea6ae86193fcef7d40ae145b571b0654bf23071b169'
+          ]
+        }
+      }
+    ],
+    management_type: 'gameroom',
+    application_metadata: ''
+  },
+  {
+    id: 'WBh1C-MIcIK',
+    members: ['alpha-node-000', 'beta-node-000'],
+    roster: [
+      {
+        service_id: 'JWrS',
+        service_type: 'scabbard',
+        allowed_nodes: ['alpha-node-000'],
+        arguments: {
+          peer_services: ['rOF6'],
+          admin_keys: [
+            '029150e180d57a8d5babde0ea6ae86193fcef7d40ae145b571b0654bf23071b169'
+          ]
+        }
+      },
+      {
+        service_id: 'rOF6',
+        service_type: 'scabbard',
+        allowed_nodes: ['beta-node-000'],
+        arguments: {
+          peer_services: ['JWrS'],
+          admin_keys: [
+            '029150e180d57a8d5babde0ea6ae86193fcef7d40ae145b571b0654bf23071b169'
+          ]
+        }
+      }
+    ],
+    management_type: 'gameroom',
+    application_metadata: ''
   }
 ];
