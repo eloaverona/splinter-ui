@@ -14,17 +14,83 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useReducer } from 'react';
 import { useLocalNodeState } from '../state/localNode';
-import { useCircuitsState } from '../state/circuits';
+import mockCircuits from '../mockData/mockCircuits';
+import mockProposals from '../mockData/mockProposals';
+import { processCircuits } from '../data/processCircuits';
 
 import CircuitsTable from './CircuitsTable';
 
 import './Content.scss';
 
+const circuitsReducer = (state, action) => {
+  const order = action.orderAsc ? -1 : 1;
+  switch (action.type) {
+    case 'comments': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.comments < circuitB.comments) {
+          return order;
+        }
+        if (circuitA.comments > circuitB.comments) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    case 'circuitID': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.id < circuitB.id) {
+          return order;
+        }
+        if (circuitA.id > circuitB.id) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    case 'serviceCount': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.roster.length < circuitB.roster.length) {
+          return order;
+        }
+        if (circuitA.roster.length > circuitB.roster.length) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    case 'managementType': {
+      const sorted = state.circuits.sort((circuitA, circuitB) => {
+        if (circuitA.managementType < circuitB.managementType) {
+          return order;
+        }
+        if (circuitA.managementType > circuitB.managementType) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return { circuits: sorted };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
 const Content = () => {
+  const circuits = processCircuits(mockCircuits.concat(mockProposals));
+
+  const [circuitState, circuitsDispatch] = useReducer(circuitsReducer, {
+    circuits
+  });
   const nodeID = useLocalNodeState();
-  const [circuitState, circuitsDispatch] = useCircuitsState();
   const totalCircuits = circuitState.circuits.length;
   const actionRequired = circuitState.circuits.filter(circuit =>
     circuit.actionRequired(nodeID)
