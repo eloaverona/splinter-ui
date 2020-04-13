@@ -26,6 +26,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 
 import MainHeader from './components/MainHeader';
 import { LocalNodeProvider } from './state/localNode';
+import { CircuitsProvider } from './state/circuits';
+
 
 import Content from './components/Content';
 
@@ -35,8 +37,10 @@ function App() {
   return (
     <div className="circuits-app">
       <LocalNodeProvider>
-        <MainHeader />
-        <Content />
+        <CircuitsProvider>
+          <MainHeader />
+          <Content />
+        </CircuitsProvider>
       </LocalNodeProvider>
     </div>
   );

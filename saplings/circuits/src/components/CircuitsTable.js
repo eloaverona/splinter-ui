@@ -14,77 +14,14 @@
  * limitations under the License.
  */
 
-import React, { useReducer, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import mockCircuits from '../mockData/mockCircuits';
-import mockProposals from '../mockData/mockProposals';
-
 import { useLocalNodeState } from '../state/localNode';
-import { processCircuits, Circuit } from '../data/processCircuits';
+import { Circuit } from '../data/processCircuits';
 
 import './CircuitsTable.scss';
-
-const sortCircuitsReducer = (state, action) => {
-  const order = action.orderAsc ? -1 : 1;
-  switch (action.type) {
-    case 'comments': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.comments < circuitB.comments) {
-          return order;
-        }
-        if (circuitA.comments > circuitB.comments) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
-    }
-    case 'circuitID': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.id < circuitB.id) {
-          return order;
-        }
-        if (circuitA.id > circuitB.id) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
-    }
-    case 'serviceCount': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.roster.length < circuitB.roster.length) {
-          return order;
-        }
-        if (circuitA.roster.length > circuitB.roster.length) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
-    }
-    case 'managementType': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.managementType < circuitB.managementType) {
-          return order;
-        }
-        if (circuitA.managementType > circuitB.managementType) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
-    }
-    default:
-      throw new Error(`unhandled action type: ${action.type}`);
-  }
-};
 
 const TableHeader = ({ sort }) => {
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
@@ -189,22 +126,22 @@ TableRow.propTypes = {
   circuit: PropTypes.instanceOf(Circuit).isRequired
 };
 
-const CircuitsTable = () => {
-  const circuits = processCircuits(mockCircuits.concat(mockProposals));
-  const [circuitState, circuitsDispatch] = useReducer(sortCircuitsReducer, {
-    circuits
-  });
-
+const CircuitsTable = ({ circuits, dispatch }) => {
   return (
     <div>
       <table className="circuits-table">
-        <TableHeader sort={circuitsDispatch} />
-        {circuitState.circuits.map(item => {
+        <TableHeader sort={dispatch} />
+        {circuits.map(item => {
           return <TableRow circuit={item} />;
         })}
       </table>
     </div>
   );
+};
+
+CircuitsTable.propTypes = {
+  circuits: PropTypes.arrayOf(Circuit).isRequired,
+  dispatch: PropTypes.func.isRequired
 };
 
 export default CircuitsTable;

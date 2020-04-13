@@ -15,20 +15,21 @@
  */
 
 import React from 'react';
-import mockCircuits from '../mockData/mockCircuits';
-import mockProposals from '../mockData/mockProposals';
 import { useLocalNodeState } from '../state/localNode';
+import { useCircuitsState } from '../state/circuits';
+
 import CircuitsTable from './CircuitsTable';
 
 import './Content.scss';
 
 const Content = () => {
   const nodeID = useLocalNodeState();
-  const totalCircuits = mockCircuits.length + mockProposals.length;
-  const actionRequired = mockProposals.filter(
-    proposal =>
-      proposal.votes.filter(vote => vote.voter_node_id === nodeID).length === 0
+  const [circuitState, circuitsDispatch] = useCircuitsState();
+  const totalCircuits = circuitState.circuits.length;
+  const actionRequired = circuitState.circuits.filter(circuit =>
+    circuit.actionRequired(nodeID)
   ).length;
+
   return (
     <div className="content">
       <div className="midContent">
@@ -46,7 +47,10 @@ const Content = () => {
         </div>
         <input className="filterTable" type="text" placeholder="Filter" />
       </div>
-      <CircuitsTable />
+      <CircuitsTable
+        circuits={circuitState.circuits}
+        dispatch={circuitsDispatch}
+      />
     </div>
   );
 };
