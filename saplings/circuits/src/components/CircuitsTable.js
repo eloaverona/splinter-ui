@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -23,12 +23,80 @@ import { Circuit } from '../data/processCircuits';
 
 import './CircuitsTable.scss';
 
-const TableHeader = ({ sort }) => {
+const sortCircuits = (circuits, action) => {
+  const order = action.orderAsc ? -1 : 1;
+  switch (action.sortBy) {
+    case 'comments': {
+      const sorted = circuits.sort((circuitA, circuitB) => {
+        if (circuitA.comments < circuitB.comments) {
+          return order;
+        }
+        if (circuitA.comments > circuitB.comments) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return sorted;
+    }
+    case 'circuitID': {
+      const sorted = circuits.sort((circuitA, circuitB) => {
+        if (circuitA.id < circuitB.id) {
+          return order;
+        }
+        if (circuitA.id > circuitB.id) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return sorted;
+    }
+    case 'serviceCount': {
+      const sorted = circuits.sort((circuitA, circuitB) => {
+        if (circuitA.roster.length < circuitB.roster.length) {
+          return order;
+        }
+        if (circuitA.roster.length > circuitB.roster.length) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return sorted;
+    }
+    case 'managementType': {
+      const sorted = circuits.sort((circuitA, circuitB) => {
+        if (circuitA.managementType < circuitB.managementType) {
+          return order;
+        }
+        if (circuitA.managementType > circuitB.managementType) {
+          return -order;
+        }
+        return 0;
+      });
+
+      return sorted;
+    }
+    default:
+      return circuits;
+  }
+};
+
+const TableHeader = ({ dispatch }) => {
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
-  const sortCircuits = sortBy => {
-    setSortedAsc({ asc: !sorted.asc, field: sortBy });
-    sort({ type: sortBy, orderAsc: sorted.asc });
+  const sortCircuitsBy = (sortBy, order) => {
+    setSortedAsc({ asc: order, field: sortBy });
+    dispatch({
+      type: 'sort',
+      sortCircuits,
+      sort: { sortBy, orderAsc: order }
+    });
   };
+
+  // useEffect(() => {
+  //   sortCircuitsBy(sorted.field, sorted.asc);
+  // });
 
   const caretDown = (
     <span className="caret">
@@ -56,19 +124,19 @@ const TableHeader = ({ sort }) => {
 
   return (
     <tr className="table-header">
-      <th onClick={() => sortCircuits('comments')}>
+      <th onClick={() => sortCircuitsBy('comments', !sorted.asc)}>
         Comments
         {sortSymbol('comments')}
       </th>
-      <th onClick={() => sortCircuits('circuitID')}>
+      <th onClick={() => sortCircuitsBy('circuitID', !sorted.asc)}>
         Circuit ID
         {sortSymbol('circuitID')}
       </th>
-      <th onClick={() => sortCircuits('serviceCount')}>
+      <th onClick={() => sortCircuitsBy('serviceCount', !sorted.asc)}>
         Service count
         {sortSymbol('serviceCount')}
       </th>
-      <th onClick={() => sortCircuits('managementType')}>
+      <th onClick={() => sortCircuitsBy('managementType', !sorted.asc)}>
         Management Type
         {sortSymbol('managementType')}
       </th>
@@ -78,7 +146,7 @@ const TableHeader = ({ sort }) => {
 };
 
 TableHeader.propTypes = {
-  sort: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired
 };
 
 const proposalStatus = (circuit, nodeID) => {
@@ -130,7 +198,7 @@ const CircuitsTable = ({ circuits, dispatch }) => {
   return (
     <div>
       <table className="circuits-table">
-        <TableHeader sort={dispatch} />
+        <TableHeader dispatch={dispatch} />
         {circuits.map(item => {
           return <TableRow circuit={item} />;
         })}

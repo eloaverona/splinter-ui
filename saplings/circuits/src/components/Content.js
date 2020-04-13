@@ -25,70 +25,38 @@ import CircuitsTable from './CircuitsTable';
 import './Content.scss';
 
 const circuitsReducer = (state, action) => {
-  const order = action.orderAsc ? -1 : 1;
   switch (action.type) {
-    case 'comments': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.comments < circuitB.comments) {
-          return order;
-        }
-        if (circuitA.comments > circuitB.comments) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
+    case 'sort': {
+      const sortedCircuits = action.sortCircuits(
+        state.filteredCircuits,
+        action.sort
+      );
+      return { ...state, filteredCircuits: sortedCircuits };
     }
-    case 'circuitID': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.id < circuitB.id) {
-          return order;
-        }
-        if (circuitA.id > circuitB.id) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
-    }
-    case 'serviceCount': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.roster.length < circuitB.roster.length) {
-          return order;
-        }
-        if (circuitA.roster.length > circuitB.roster.length) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
-    }
-    case 'managementType': {
-      const sorted = state.circuits.sort((circuitA, circuitB) => {
-        if (circuitA.managementType < circuitB.managementType) {
-          return order;
-        }
-        if (circuitA.managementType > circuitB.managementType) {
-          return -order;
-        }
-        return 0;
-      });
-
-      return { circuits: sorted };
+    case 'filter': {
+      const filteredCircuits = action.filterCircuits(
+        state.circuits,
+        action.filter
+      );
+      return { ...state, filteredCircuits };
     }
     default:
       throw new Error(`unhandled action type: ${action.type}`);
   }
 };
 
+const filterCircuits = event => {
+  console.log("EVENT!");
+
+  console.log(event);
+};
+
 const Content = () => {
   const circuits = processCircuits(mockCircuits.concat(mockProposals));
 
   const [circuitState, circuitsDispatch] = useReducer(circuitsReducer, {
-    circuits
+    circuits,
+    filteredCircuits: circuits
   });
   const nodeID = useLocalNodeState();
   const totalCircuits = circuitState.circuits.length;
@@ -111,14 +79,21 @@ const Content = () => {
             Action Required
           </div>
         </div>
-        <input className="filterTable" type="text" placeholder="Filter" />
+        <input
+          className="filterTable"
+          type="text"
+          placeholder="Filter"
+          onKeyUp={() => filterCircuits}
+        />
       </div>
       <CircuitsTable
-        circuits={circuitState.circuits}
+        circuits={circuitState.filteredCircuits}
         dispatch={circuitsDispatch}
       />
     </div>
   );
 };
+
+
 
 export default Content;
