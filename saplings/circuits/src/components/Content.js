@@ -52,9 +52,6 @@ const filterCircuits = (circuits, filterBy) => {
     return circuits;
   }
   const filteredCircuits = circuits.filter(circuit => {
-    console.log("CIRCUIT TO BE FILTERED");
-
-    console.log(circuit);
     if (circuit.id.toLowerCase().indexOf(filterBy.filterTerm) > -1) {
       return true;
     }
@@ -67,7 +64,7 @@ const filterCircuits = (circuits, filterBy) => {
       return true;
     }
     if (
-      circuit.member.filter(
+      circuit.members.filter(
         member => member.toLowerCase().indexOf(filterBy.filterTerm) > -1
       ).length > 0
     ) {
