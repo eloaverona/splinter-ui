@@ -183,7 +183,15 @@ const TableRow = ({ circuit }) => {
         {circuit.comments}
       </td>
       <td className="text-highlight">{circuit.id}</td>
-      <td>{circuit.roster.length}</td>
+      <td>
+        {
+          new Set(
+            circuit.roster.map(service => {
+              return service.service_type;
+            })
+          ).size
+        }
+      </td>
       <td>{circuit.managementType}</td>
       <td>
         {circuit.awaitingApproval() ? proposalStatus(circuit, nodeID) : ''}
