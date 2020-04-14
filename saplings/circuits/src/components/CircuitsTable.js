@@ -28,6 +28,12 @@ const sortCircuits = (circuits, action) => {
   switch (action.sortBy) {
     case 'comments': {
       const sorted = circuits.sort((circuitA, circuitB) => {
+        if (circuitA.comments === 'N/A' && circuitB.comments !== 'N/A') {
+          return 1; // 'N/A should always be at the bottom'
+        }
+        if (circuitA.comments !== 'N/A' && circuitB.comments === 'N/A') {
+          return -1; // 'N/A should always be at the bottom'
+        }
         if (circuitA.comments < circuitB.comments) {
           return order;
         }
@@ -86,7 +92,6 @@ const sortCircuits = (circuits, action) => {
 const TableHeader = ({ dispatch, circuits }) => {
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
   const sortCircuitsBy = (sortBy, order) => {
-    console.log("CALLED");
     setSortedAsc({ asc: order, field: sortBy });
     dispatch({
       type: 'sort',
@@ -179,7 +184,13 @@ const TableRow = ({ circuit }) => {
   const nodeID = useLocalNodeState();
   return (
     <tr className="table-row">
-      <td className={circuit.comments === 'N/A' ? 'text-grey' : ''}>
+      <td
+        className={
+          circuit.comments === 'N/A'
+            ? 'ellipsis-overflow text-grey'
+            : 'ellipsis-overflow'
+        }
+      >
         {circuit.comments}
       </td>
       <td className="text-highlight">{circuit.id}</td>

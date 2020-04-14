@@ -25,6 +25,7 @@
     th, td {
       border-bottom: 1px solid var(--color-light-grey);
       padding: 2rem 2rem 2rem 0;
+      max-width: 5%;
     }
 
     .table-header th {
@@ -80,6 +81,12 @@
 
       .text-grey {
         color: var(--color-light-grey)
+      }
+
+      .ellipsis-overflow {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
   }

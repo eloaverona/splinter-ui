@@ -213,7 +213,8 @@ export default [
       management_type: 'grid',
       application_metadata:
         '7b2273636162626172645f61646d696e5f6b657973223a5b223',
-      comments: 'Greek Alphabet Consortium'
+      comments:
+        'Greek Alphabet Consortium: \n This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal. This is a long comment describing this proposal.'
     },
     votes: [
       {
@@ -396,7 +397,7 @@ export default [
           }
         }
       ],
-      management_type: 'gameroom',
+      management_type: 'defaut',
       application_metadata:
         '7b2273636162626172645f61646d696e5f6b657973223a5b223',
       comments: 'Circuit Test 001'
