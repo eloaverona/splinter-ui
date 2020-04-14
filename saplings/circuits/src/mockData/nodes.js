@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-.main-header {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 2rem 3rem 0rem 3rem;
-
-  .circuits-title {
-    color: var(--color-grey);
-    font-weight: 100;
-    margin: 0 1rem 0 0;
+export default [
+  {
+    identity: 'alpha-node-000',
+    endpoint: 'tls://splinterd-alpha:8044',
+    display_name: 'Alpha - Node 0',
+    metadata: {
+      organization: 'Alpha'
+    }
+  },
+  {
+    identity: 'beta-node-000',
+    endpoint: 'tls://splinterd-beta:8044',
+    display_name: 'Beta - Node 0',
+    metadata: {
+      organization: 'Beta'
+    }
   }
-}
+];

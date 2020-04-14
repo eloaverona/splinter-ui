@@ -13,17 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-.main-header {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 2rem 3rem 0rem 3rem;
-
-  .circuits-title {
-    color: var(--color-grey);
-    font-weight: 100;
-    margin: 0 1rem 0 0;
-  }
-}

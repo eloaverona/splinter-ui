@@ -16,17 +16,28 @@
 
 import React from 'react';
 import './App.css';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faCaretUp,
+  faCaretDown,
+  faExclamation
+} from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 import MainHeader from './components/MainHeader';
+import { LocalNodeProvider } from './state/localNode';
 
-library.add(faPlus);
+import Content from './components/Content';
+
+library.add(faPlus, faCaretUp, faCaretDown, faExclamation);
 
 function App() {
   return (
     <div className="circuits-app">
-      <MainHeader />
+      <LocalNodeProvider>
+        <MainHeader />
+        <Content />
+      </LocalNodeProvider>
     </div>
   );
 }
