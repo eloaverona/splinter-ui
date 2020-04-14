@@ -176,7 +176,7 @@ const proposalStatus = (circuit, nodeID) => {
 };
 
 const TableRow = ({ circuit }) => {
-  const nodeID = 'beta-node-000'; //useLocalNodeState();
+  const nodeID = useLocalNodeState();
   return (
     <tr className="table-row">
       <td className={circuit.comments === 'N/A' ? 'text-grey' : ''}>
