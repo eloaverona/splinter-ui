@@ -17,11 +17,11 @@
 export default [
   {
     proposal_type: 'Create',
-    circuit_id: '01234-ABCDE',
+    circuit_id: 'uI2jb-JtA9s',
     circuit_hash:
       '8ce518770b962429a953b10220905ac9adf86a855f0b085695f444edf991b8ca',
     circuit: {
-      circuit_id: '01234-ABCDE',
+      circuit_id: 'uI2jb-JtA9s',
       members: [
         {
           node_id: 'alpha-node-000',
@@ -75,11 +75,11 @@ export default [
   },
   {
     proposal_type: 'Create',
-    circuit_id: '01234-ABCDE',
+    circuit_id: '6MNri-wRJ7B',
     circuit_hash:
       '8ce518770b962429a953b10220905ac9adf86a855f0b085695f444edf991b8ca',
     circuit: {
-      circuit_id: '01234-ABCDE',
+      circuit_id: '6MNri-wRJ7B',
       members: [
         {
           node_id: 'alpha-node-000',
@@ -133,11 +133,11 @@ export default [
   },
   {
     proposal_type: 'Create',
-    circuit_id: '01234-ABCDE',
+    circuit_id: 'S0cJ6-Z3Gb8',
     circuit_hash:
       '8ce518770b962429a953b10220905ac9adf86a855f0b085695f444edf991b8ca',
     circuit: {
-      circuit_id: '01234-ABCDE',
+      circuit_id: 'S0cJ6-Z3Gb8',
       members: [
         {
           node_id: 'alpha-node-000',
@@ -191,11 +191,11 @@ export default [
   },
   {
     proposal_type: 'Create',
-    circuit_id: '01234-ABCDE',
+    circuit_id: '2LeHR-rKeX7',
     circuit_hash:
       '8ce518770b962429a953b10220905ac9adf86a855f0b085695f444edf991b8ca',
     circuit: {
-      circuit_id: '01234-ABCDE',
+      circuit_id: '2LeHR-rKeX7',
       members: [
         {
           node_id: 'alpha-node-000',
@@ -249,11 +249,11 @@ export default [
   },
   {
     proposal_type: 'Create',
-    circuit_id: '01234-ABCDE',
+    circuit_id: 'IK6Nt-8vG49',
     circuit_hash:
       '8ce518770b962429a953b10220905ac9adf86a855f0b085695f444edf991b8ca',
     circuit: {
-      circuit_id: '01234-ABCDE',
+      circuit_id: 'IK6Nt-8vG49',
       members: [
         {
           node_id: 'alpha-node-000',
