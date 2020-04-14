@@ -89,6 +89,20 @@ const sortCircuits = (circuits, action) => {
   }
 };
 
+const filterCircuits = (circuits, filterBy) => {
+  const filteredCircuits = circuits.filter(circuit => {
+    let include = false;
+    if (filterBy.awaitingApproval) {
+      include = include || circuit.awaitingApproval;
+    }
+    if (filterBy.actionRequired) {
+      include = include || circuit.actionRequired;
+    }
+    return include;
+  });
+  return filteredCircuits;
+};
+
 const TableHeader = ({ dispatch, circuits }) => {
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
   const sortCircuitsBy = (sortBy, order) => {
@@ -128,6 +142,63 @@ const TableHeader = ({ dispatch, circuits }) => {
     return caretDown;
   };
 
+  const filterSymbol = (
+    <span className="caret filterSymbol">
+      <FontAwesomeIcon icon="filter" />
+    </span>
+  );
+
+  const [filterSettings, setFilterSettings] = useState({
+    show: false,
+    actionRequired: false,
+    awaitingApproval: false
+  });
+
+  const filterOptions = (
+    <div
+      className={
+        filterSettings.show ? 'filterStatus show' : 'filterStatus hide'
+      }
+    >
+      <input
+        type="checkbox"
+        name="actionRequired"
+        value="actionRequired"
+        onChange={() => {
+          setFilterSettings({
+            ...filterSettings,
+            actionRequired: !filterSettings.actionRequired
+          });
+        }}
+      />
+      Action required
+      <input
+        type="checkbox"
+        name="awaitingApproval"
+        value="awaitingApproval"
+        onChange={() => {
+          setFilterSettings({
+            ...filterSettings,
+            awaitingApproval: !filterSettings.awaitingApproval
+          });
+        }}
+      />
+      Awaiting approval
+      <button
+        type="button"
+        onClick={() => {
+          dispatch({
+            type: 'filter',
+            filterCircuits,
+            filter: filterSettings
+          });
+        }}
+      >
+        Apply
+      </button>
+    </div>
+  );
+
   return (
     <tr className="table-header">
       <th onClick={() => sortCircuitsBy('comments', !sorted.asc)}>
@@ -146,7 +217,15 @@ const TableHeader = ({ dispatch, circuits }) => {
         Management Type
         {sortSymbol('managementType')}
       </th>
-      <th>Status</th>
+      <th
+        onClick={() => {
+          setFilterSettings({...filterSettings, show: !filterSettings.show});
+        }}
+      >
+        Status
+        {filterSymbol}
+      </th>
+      {filterOptions}
     </tr>
   );
 };

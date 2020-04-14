@@ -47,6 +47,15 @@
       }
     }
 
+    .filterStatus.hide {
+        display: none
+    }
+
+    .filterStatus.show {
+        display: flex;
+        flex-direction: column;
+    }
+
     .table-row {
       td, .proposal-status {
         font-size: 0.8rem;

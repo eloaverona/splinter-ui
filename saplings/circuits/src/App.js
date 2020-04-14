@@ -20,7 +20,8 @@ import {
   faPlus,
   faCaretUp,
   faCaretDown,
-  faExclamation
+  faExclamation,
+  faFilter
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -29,7 +30,7 @@ import { LocalNodeProvider } from './state/localNode';
 
 import Content from './components/Content';
 
-library.add(faPlus, faCaretUp, faCaretDown, faExclamation);
+library.add(faPlus, faCaretUp, faCaretDown, faExclamation, faFilter);
 
 function App() {
   return (
