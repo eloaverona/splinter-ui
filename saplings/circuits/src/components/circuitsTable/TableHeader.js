@@ -175,11 +175,13 @@ const TableHeader = ({ dispatch, circuits }) => {
     return caretDown;
   };
 
-  const filterSymbol = (
-    <span className="caret filterSymbol">
-      <FontAwesomeIcon icon="filter" />
-    </span>
-  );
+  const filterSymbol = selected => {
+    return (
+      <span className={selected ? 'caret text-highlight' : 'caret'}>
+        <FontAwesomeIcon icon="filter" />
+      </span>
+    );
+  };
 
   const exclamationCircle = (
     <span className="status-icon action-required">
@@ -295,7 +297,9 @@ const TableHeader = ({ dispatch, circuits }) => {
             }}
           >
             Status
-            {filterSymbol}
+            {filterSymbol(
+              filterSettings.actionRequired || filterSettings.awaitingApproval
+            )}
           </button>
           {filterOptions}
         </div>

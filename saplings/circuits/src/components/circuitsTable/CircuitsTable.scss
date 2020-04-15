@@ -117,6 +117,14 @@
       color: var(--color-secondary)
     }
 
+    .text-highlight {
+      color: var(--color-secondary)
+    }
+
+    .text-grey {
+      color: var(--color-light-grey)
+    }
+
     .table-row {
       td, .proposal-status {
         font-size: 0.8rem;
@@ -135,14 +143,6 @@
             margin-left: 0.5rem;
           }
         }
-      }
-
-      .text-highlight {
-        color: var(--color-secondary)
-      }
-
-      .text-grey {
-        color: var(--color-light-grey)
       }
 
       .ellipsis-overflow {
