@@ -189,11 +189,7 @@ const TableHeader = ({ dispatch, circuits }) => {
     <div className={filterSettings.show ? 'filterStatus show' : 'filterStatus'}>
       <div className="statusOptions">
         <button
-          className={
-            filterSettings.actionRequired
-              ? 'filterOption selected'
-              : 'filterOption'
-          }
+          className="filterOption"
           type="button"
           onClick={() => {
             tempActionRequired = !tempActionRequired;
@@ -204,17 +200,10 @@ const TableHeader = ({ dispatch, circuits }) => {
           {checkMark(!tempActionRequired)}
         </button>
         <button
-          className={
-            filterSettings.awaitingApproval
-              ? 'filterOption selected'
-              : 'filterOption'
-          }
+          className="filterOption"
           type="button"
           onClick={() => {
             tempAwaitingApproval = !tempAwaitingApproval;
-            console.log("tempAwaitingApproval")
-
-            console.log(tempAwaitingApproval);
           }}
         >
           {businessTime}
@@ -224,19 +213,20 @@ const TableHeader = ({ dispatch, circuits }) => {
         <button
           type="button"
           onClick={() => {
-            console.log("tempAwaitingApproval in apply");
-
-            console.log(tempAwaitingApproval);
-
             setFilterSettings({
               show: false,
               awaitingApproval: tempAwaitingApproval,
               actionRequired: tempActionRequired
             });
+
             dispatch({
               type: 'filterByStatus',
               filterCircuits,
-              filter: { ...filterSettings, nodeID }
+              filter: {
+                awaitingApproval: tempAwaitingApproval,
+                actionRequired: tempActionRequired,
+                nodeID
+              }
             });
           }}
         >
