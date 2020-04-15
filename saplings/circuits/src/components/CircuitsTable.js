@@ -182,6 +182,9 @@ const TableHeader = ({ dispatch, circuits }) => {
     awaitingApproval: false
   });
 
+  let tempActionRequired = filterSettings.actionRequired;
+  let tempAwaitingApproval = filterSettings.awaitingApproval;
+
   const filterOptions = (
     <div className={filterSettings.show ? 'filterStatus show' : 'filterStatus'}>
       <div className="statusOptions">
@@ -193,15 +196,12 @@ const TableHeader = ({ dispatch, circuits }) => {
           }
           type="button"
           onClick={() => {
-            setFilterSettings({
-              ...filterSettings,
-              actionRequired: !filterSettings.actionRequired
-            });
+            tempActionRequired = !tempActionRequired;
           }}
         >
           {exclamationCircle}
           Action required
-          {checkMark(!filterSettings.actionRequired)}
+          {checkMark(!tempActionRequired)}
         </button>
         <button
           className={
@@ -211,20 +211,28 @@ const TableHeader = ({ dispatch, circuits }) => {
           }
           type="button"
           onClick={() => {
-            setFilterSettings({
-              ...filterSettings,
-              awaitingApproval: !filterSettings.awaitingApproval
-            });
+            tempAwaitingApproval = !tempAwaitingApproval;
+            console.log("tempAwaitingApproval")
+
+            console.log(tempAwaitingApproval);
           }}
         >
           {businessTime}
           Awaiting approval
-          {checkMark(!filterSettings.awaitingApproval)}
+          {checkMark(!tempAwaitingApproval)}
         </button>
         <button
           type="button"
           onClick={() => {
-            setFilterSettings({ ...filterSettings, show: false });
+            console.log("tempAwaitingApproval in apply");
+
+            console.log(tempAwaitingApproval);
+
+            setFilterSettings({
+              show: false,
+              awaitingApproval: tempAwaitingApproval,
+              actionRequired: tempActionRequired
+            });
             dispatch({
               type: 'filterByStatus',
               filterCircuits,
