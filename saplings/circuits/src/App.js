@@ -21,7 +21,8 @@ import {
   faCaretUp,
   faCaretDown,
   faExclamation,
-  faFilter
+  faFilter,
+  faSort
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -30,7 +31,7 @@ import { LocalNodeProvider } from './state/localNode';
 
 import Content from './components/Content';
 
-library.add(faPlus, faCaretUp, faCaretDown, faExclamation, faFilter);
+library.add(faPlus, faCaretUp, faCaretDown, faExclamation, faFilter, faSort);
 
 function App() {
   return (

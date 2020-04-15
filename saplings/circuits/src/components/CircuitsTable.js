@@ -134,11 +134,15 @@ const TableHeader = ({ dispatch, circuits }) => {
     </span>
   );
 
-  const circle = <span className="caret">●</span>;
+  const sortableSymbol = (
+    <span className="caret">
+      <FontAwesomeIcon icon="sort" />
+    </span>
+  );
 
   const sortSymbol = fieldType => {
     if (sorted.field !== fieldType) {
-      return circle;
+      return sortableSymbol;
     }
     if (sorted.asc) {
       return caretUp;
