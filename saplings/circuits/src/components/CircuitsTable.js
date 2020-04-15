@@ -93,10 +93,13 @@ const filterCircuits = (circuits, filterBy) => {
   const filteredCircuits = circuits.filter(circuit => {
     let include = false;
     if (filterBy.awaitingApproval) {
-      include = include || circuit.awaitingApproval;
+      include = include || circuit.awaitingApproval();
     }
     if (filterBy.actionRequired) {
-      include = include || circuit.actionRequired;
+      include = include || circuit.actionRequired(filterBy.nodeID);
+    }
+    if (!filterBy.awaitingApproval && !filterBy.actionRequired) {
+      include = true;
     }
     return include;
   });
@@ -104,6 +107,7 @@ const filterCircuits = (circuits, filterBy) => {
 };
 
 const TableHeader = ({ dispatch, circuits }) => {
+  const nodeID = useLocalNodeState();
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
   const sortCircuitsBy = (sortBy, order) => {
     setSortedAsc({ asc: order, field: sortBy });
@@ -188,9 +192,9 @@ const TableHeader = ({ dispatch, circuits }) => {
         type="button"
         onClick={() => {
           dispatch({
-            type: 'filter',
+            type: 'filterByStatus',
             filterCircuits,
-            filter: filterSettings
+            filter: { ...filterSettings, nodeID }
           });
         }}
       >
@@ -219,7 +223,7 @@ const TableHeader = ({ dispatch, circuits }) => {
       </th>
       <th
         onClick={() => {
-          setFilterSettings({...filterSettings, show: !filterSettings.show});
+          setFilterSettings({ ...filterSettings, show: !filterSettings.show });
         }}
       >
         Status
