@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -104,6 +104,33 @@ const filterCircuits = (circuits, filterBy) => {
   return filteredCircuits;
 };
 
+const filtersReducer = (state, action) => {
+  switch (action.type) {
+    case 'show': {
+      // reset any filter that was no applied
+      const stageActionRequired = state.actionRequired;
+      const stageAwaitingApproval = state.awaitingApproval;
+      return {
+        ...state,
+        show: !state.show,
+        stageActionRequired,
+        stageAwaitingApproval
+      };
+    }
+    case 'stage': {
+      const { stageActionRequired, stageAwaitingApproval } = action;
+      return { ...state, stageActionRequired, stageAwaitingApproval };
+    }
+    case 'apply': {
+      const actionRequired = state.stageActionRequired;
+      const awaitingApproval = state.stageAwaitingApproval;
+      return { ...state, actionRequired, awaitingApproval, show: false };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
 const TableHeader = ({ dispatch, circuits }) => {
   const nodeID = useLocalNodeState();
   const [sorted, setSortedAsc] = useState({ asc: false, field: '' });
@@ -174,14 +201,13 @@ const TableHeader = ({ dispatch, circuits }) => {
     );
   };
 
-  const [filterSettings, setFilterSettings] = useState({
+  const [filterSettings, setFilterSettings] = useReducer(filtersReducer, {
     show: false,
     actionRequired: false,
-    awaitingApproval: false
+    awaitingApproval: false,
+    stageActionRequired: false,
+    stageAwaitingApproval: false
   });
-
-  let tempActionRequired = filterSettings.actionRequired;
-  let tempAwaitingApproval = filterSettings.awaitingApproval;
 
   const filterOptions = (
     <div className={filterSettings.show ? 'filterStatus show' : 'filterStatus'}>
@@ -190,39 +216,45 @@ const TableHeader = ({ dispatch, circuits }) => {
           className="filterOption"
           type="button"
           onClick={() => {
-            tempActionRequired = !tempActionRequired;
+            setFilterSettings({
+              type: 'stage',
+              stageActionRequired: !filterSettings.stageActionRequired,
+              stageAwaitingApproval: filterSettings.stageAwaitingApproval
+            });
           }}
         >
           {exclamationCircle}
           Action required
-          {checkMark(!tempActionRequired)}
+          {checkMark(!filterSettings.stageActionRequired)}
         </button>
         <button
           className="filterOption"
           type="button"
           onClick={() => {
-            tempAwaitingApproval = !tempAwaitingApproval;
+            setFilterSettings({
+              type: 'stage',
+              stageActionRequired: filterSettings.stageActionRequired,
+              stageAwaitingApproval: !filterSettings.stageAwaitingApproval
+            });
           }}
         >
           {businessTime}
           Awaiting approval
-          {checkMark(!tempAwaitingApproval)}
+          {checkMark(!filterSettings.stageAwaitingApproval)}
         </button>
         <button
           type="button"
           onClick={() => {
             setFilterSettings({
-              show: false,
-              awaitingApproval: tempAwaitingApproval,
-              actionRequired: tempActionRequired
+              type: 'apply'
             });
 
             dispatch({
               type: 'filterByStatus',
               filterCircuits,
               filter: {
-                awaitingApproval: tempAwaitingApproval,
-                actionRequired: tempActionRequired,
+                awaitingApproval: filterSettings.stageAwaitingApproval,
+                actionRequired: filterSettings.stageActionRequired,
                 nodeID
               }
             });
@@ -258,8 +290,7 @@ const TableHeader = ({ dispatch, circuits }) => {
             type="button"
             onClick={() => {
               setFilterSettings({
-                ...filterSettings,
-                show: !filterSettings.show
+                type: 'show'
               });
             }}
           >
