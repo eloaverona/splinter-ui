@@ -156,6 +156,26 @@ const TableHeader = ({ dispatch, circuits }) => {
     </span>
   );
 
+  const exclamationCircle = (
+    <span className="status-icon action-required">
+      <FontAwesomeIcon icon="exclamation-circle" />
+    </span>
+  );
+
+  const businessTime = (
+    <span className="status-icon awaiting-approval">
+      <FontAwesomeIcon icon="business-time" />
+    </span>
+  );
+
+  const checkMark = hidden => {
+    return (
+      <span className={hidden ? 'status-icon hidden' : 'status-icon'}>
+        <FontAwesomeIcon icon="check" />
+      </span>
+    );
+  };
+
   const [filterSettings, setFilterSettings] = useState({
     show: false,
     actionRequired: false,
@@ -163,47 +183,58 @@ const TableHeader = ({ dispatch, circuits }) => {
   });
 
   const filterOptions = (
-    <div
-      className={
-        filterSettings.show ? 'filterStatus show' : 'filterStatus hide'
-      }
-    >
-      <input
-        type="checkbox"
-        name="actionRequired"
-        value="actionRequired"
-        onChange={() => {
-          setFilterSettings({
-            ...filterSettings,
-            actionRequired: !filterSettings.actionRequired
-          });
-        }}
-      />
-      Action required
-      <input
-        type="checkbox"
-        name="awaitingApproval"
-        value="awaitingApproval"
-        onChange={() => {
-          setFilterSettings({
-            ...filterSettings,
-            awaitingApproval: !filterSettings.awaitingApproval
-          });
-        }}
-      />
-      Awaiting approval
-      <button
-        type="button"
-        onClick={() => {
-          dispatch({
-            type: 'filterByStatus',
-            filterCircuits,
-            filter: { ...filterSettings, nodeID }
-          });
-        }}
-      >
-        Apply
-      </button>
+    <div className={filterSettings.show ? 'filterStatus show' : 'filterStatus'}>
+      <div className="statusOptions">
+        <button
+          className={
+            filterSettings.actionRequired
+              ? 'filterOption selected'
+              : 'filterOption'
+          }
+          type="button"
+          onClick={() => {
+            setFilterSettings({
+              ...filterSettings,
+              actionRequired: !filterSettings.actionRequired
+            });
+          }}
+        >
+          {exclamationCircle}
+          Action required
+          {checkMark(!filterSettings.actionRequired)}
+        </button>
+        <button
+          className={
+            filterSettings.awaitingApproval
+              ? 'filterOption selected'
+              : 'filterOption'
+          }
+          type="button"
+          onClick={() => {
+            setFilterSettings({
+              ...filterSettings,
+              awaitingApproval: !filterSettings.awaitingApproval
+            });
+          }}
+        >
+          {businessTime}
+          Awaiting approval
+          {checkMark(!filterSettings.awaitingApproval)}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setFilterSettings({ ...filterSettings, show: false });
+            dispatch({
+              type: 'filterByStatus',
+              filterCircuits,
+              filter: { ...filterSettings, nodeID }
+            });
+          }}
+        >
+          Apply
+        </button>
+      </div>
     </div>
   );
 
@@ -225,14 +256,20 @@ const TableHeader = ({ dispatch, circuits }) => {
         Management Type
         {sortSymbol('managementType')}
       </th>
-      <th
-        onClick={() => {
-          setFilterSettings({ ...filterSettings, show: !filterSettings.show });
-        }}
-      >
+      <th>
         <div className="status-dropdown">
-          Status
-          {filterSymbol}
+          <button
+            type="button"
+            onClick={() => {
+              setFilterSettings({
+                ...filterSettings,
+                show: !filterSettings.show
+              });
+            }}
+          >
+            Status
+            {filterSymbol}
+          </button>
           {filterOptions}
         </div>
       </th>

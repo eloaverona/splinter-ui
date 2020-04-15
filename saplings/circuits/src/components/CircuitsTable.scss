@@ -50,18 +50,71 @@
     .status-dropdown {
       position: relative;
       display: inline-block;
+      width: 100%;
+      padding: 0;
+
+      button {
+        background-color: transparent;
+        border: none;
+        color: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        letter-spacing: inherit;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      button:focus {
+        outline: none
+      }
     }
 
-
     .filterStatus {
-        display: none;
-        position: absolute;
-        z-index: 1;
+      margin-top: 1rem;
+      display: none;
+      position: absolute;
+      z-index: 1;
+      background-color: var(--background-color-white);
+      width: 12rem;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+      .status-icon {
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+      }
+      .hidden {
+        visibility: hidden;
+      }
+
+    }
+
+    .statusOptions {
+      display: flex;
+      flex-direction: column;
+
+      .filterOption {
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--color-light-grey);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .filterOption:hover {
+        background-color: var(--color-light-grey);
+      }
     }
 
     .filterStatus.show {
         display: block;
-        flex-direction: column;
+    }
+
+    .action-required {
+      color: var(--color-attention);
+    }
+
+    .awaiting-approval {
+      color: var(--color-secondary)
     }
 
     .table-row {
@@ -81,14 +134,6 @@
           .status-icon {
             margin-left: 0.5rem;
           }
-        }
-
-        .action-required {
-          color: var(--color-attention);
-        }
-
-        .awaiting-approval {
-          color: var(--color-secondary)
         }
       }
 
