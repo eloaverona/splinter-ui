@@ -107,7 +107,7 @@ const filterCircuits = (circuits, filterBy) => {
 const filtersReducer = (state, action) => {
   switch (action.type) {
     case 'show': {
-      // reset any filter that was no applied
+      // reset any filter options that were not applied
       const stageActionRequired = state.actionRequired;
       const stageAwaitingApproval = state.awaitingApproval;
       return {
@@ -175,16 +175,6 @@ const TableHeader = ({ dispatch, circuits }) => {
     </span>
   );
 
-  const sortSymbol = fieldType => {
-    if (sorted.field !== fieldType) {
-      return sortableSymbol;
-    }
-    if (sorted.asc) {
-      return caretUp;
-    }
-    return caretDown;
-  };
-
   const filterSymbol = selected => {
     return (
       <span className={selected ? 'caret text-highlight' : 'caret'}>
@@ -211,6 +201,16 @@ const TableHeader = ({ dispatch, circuits }) => {
         <FontAwesomeIcon icon="check" />
       </span>
     );
+  };
+
+  const sortSymbol = fieldType => {
+    if (sorted.field !== fieldType) {
+      return sortableSymbol;
+    }
+    if (sorted.asc) {
+      return caretUp;
+    }
+    return caretDown;
   };
 
   const [filterSettings, setFilterSettings] = useReducer(filtersReducer, {
