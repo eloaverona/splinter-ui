@@ -124,6 +124,16 @@ const filtersReducer = (state, action) => {
     case 'apply': {
       const actionRequired = state.stageActionRequired;
       const awaitingApproval = state.stageAwaitingApproval;
+
+      action.dispatch({
+        type: 'filterByStatus',
+        filterCircuits,
+        filter: {
+          awaitingApproval,
+          actionRequired,
+          nodeID: action.nodeID
+        }
+      });
       return { ...state, actionRequired, awaitingApproval, show: false };
     }
     default:
@@ -246,23 +256,16 @@ const TableHeader = ({ dispatch, circuits }) => {
         </button>
         <button
           type="button"
+          className="apply-filter-btn"
           onClick={() => {
             setFilterSettings({
-              type: 'apply'
-            });
-
-            dispatch({
-              type: 'filterByStatus',
-              filterCircuits,
-              filter: {
-                awaitingApproval: filterSettings.stageAwaitingApproval,
-                actionRequired: filterSettings.stageActionRequired,
-                nodeID
-              }
+              type: 'apply',
+              dispatch,
+              nodeID
             });
           }}
         >
-          Apply
+          Apply filter
         </button>
       </div>
     </div>
