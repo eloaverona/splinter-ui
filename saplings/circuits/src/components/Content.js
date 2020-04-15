@@ -20,7 +20,7 @@ import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
 import { processCircuits } from '../data/processCircuits';
 
-import CircuitsTable from './CircuitsTable';
+import CircuitsTable from './circuitsTable/Table';
 
 import './Content.scss';
 

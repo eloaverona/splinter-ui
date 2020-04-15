@@ -18,10 +18,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useLocalNodeState } from '../state/localNode';
-import { Circuit } from '../data/processCircuits';
-
-import './CircuitsTable.scss';
+import { useLocalNodeState } from '../../state/localNode';
+import { Circuit } from '../../data/processCircuits';
 
 const sortCircuits = (circuits, action) => {
   const order = action.orderAsc ? -1 : 1;
@@ -280,81 +278,4 @@ TableHeader.propTypes = {
   circuits: PropTypes.arrayOf(Circuit).isRequired
 };
 
-const proposalStatus = (circuit, nodeID) => {
-  const exclamation = (
-    <span className="status-icon">
-      <FontAwesomeIcon icon="exclamation" />
-    </span>
-  );
-  const awaiting = (
-    <span className="status awaiting-approval">Awaiting Approval</span>
-  );
-  return (
-    <div className="proposal-status">
-      {circuit.actionRequired(nodeID) ? (
-        <span className="status action-required">
-          Action Required
-          {exclamation}
-        </span>
-      ) : (
-        ''
-      )}
-      {awaiting}
-    </div>
-  );
-};
-
-const TableRow = ({ circuit }) => {
-  const nodeID = useLocalNodeState();
-  return (
-    <tr className="table-row">
-      <td
-        className={
-          circuit.comments === 'N/A'
-            ? 'ellipsis-overflow text-grey'
-            : 'ellipsis-overflow'
-        }
-      >
-        {circuit.comments}
-      </td>
-      <td className="text-highlight">{circuit.id}</td>
-      <td>
-        {
-          new Set(
-            circuit.roster.map(service => {
-              return service.service_type;
-            })
-          ).size
-        }
-      </td>
-      <td>{circuit.managementType}</td>
-      <td>
-        {circuit.awaitingApproval() ? proposalStatus(circuit, nodeID) : ''}
-      </td>
-    </tr>
-  );
-};
-
-TableRow.propTypes = {
-  circuit: PropTypes.instanceOf(Circuit).isRequired
-};
-
-const CircuitsTable = ({ circuits, dispatch }) => {
-  return (
-    <div className="table-container">
-      <table className="circuits-table">
-        <TableHeader dispatch={dispatch} circuits={circuits} />
-        {circuits.map(item => {
-          return <TableRow circuit={item} />;
-        })}
-      </table>
-    </div>
-  );
-};
-
-CircuitsTable.propTypes = {
-  circuits: PropTypes.arrayOf(Circuit).isRequired,
-  dispatch: PropTypes.func.isRequired
-};
-
-export default CircuitsTable;
+export default TableHeader;
