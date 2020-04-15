@@ -57,7 +57,7 @@ const circuitsReducer = (state, action) => {
       );
 
       let filteredCircuits = filteredByStatus;
-      if (state.filteredByStatus.length > 0) {
+      if (state.filteredByTerm.length > 0) {
         filteredCircuits = filteredByStatus.filter(
           circuit => state.filteredByTerm.indexOf(circuit) > -1
         );

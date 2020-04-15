@@ -47,12 +47,20 @@
       }
     }
 
-    .filterStatus.hide {
-        display: none
+    .status-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+
+    .filterStatus {
+        display: none;
+        position: absolute;
+        z-index: 1;
     }
 
     .filterStatus.show {
-        display: flex;
+        display: block;
         flex-direction: column;
     }
 

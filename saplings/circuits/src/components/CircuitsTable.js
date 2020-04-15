@@ -226,10 +226,12 @@ const TableHeader = ({ dispatch, circuits }) => {
           setFilterSettings({ ...filterSettings, show: !filterSettings.show });
         }}
       >
-        Status
-        {filterSymbol}
+        <div className="status-dropdown">
+          Status
+          {filterSymbol}
+          {filterOptions}
+        </div>
       </th>
-      {filterOptions}
     </tr>
   );
 };
