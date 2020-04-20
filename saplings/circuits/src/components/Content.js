@@ -33,12 +33,41 @@ const circuitsReducer = (state, action) => {
       );
       return { ...state, filteredCircuits: sortedCircuits };
     }
-    case 'filter': {
-      const filteredCircuits = action.filterCircuits(
+    case 'filterByTerm': {
+      const filteredByTerm = action.filterCircuits(
         state.circuits,
         action.filter
       );
-      return { ...state, filteredCircuits };
+      let filteredCircuits = filteredByTerm;
+      if (state.filteredByStatus.length > 0) {
+        filteredCircuits = filteredByTerm.filter(
+          circuit => state.filteredByStatus.indexOf(circuit) > -1
+        );
+      }
+      return {
+        ...state,
+        filteredByTerm,
+        filteredCircuits
+      };
+    }
+    case 'filterByStatus': {
+      const filteredByStatus = action.filterCircuits(
+        state.circuits,
+        action.filter
+      );
+
+      let filteredCircuits = filteredByStatus;
+      if (state.filteredByTerm.length > 0) {
+        filteredCircuits = filteredByStatus.filter(
+          circuit => state.filteredByTerm.indexOf(circuit) > -1
+        );
+      }
+
+      return {
+        ...state,
+        filteredByStatus,
+        filteredCircuits
+      };
     }
     default:
       throw new Error(`unhandled action type: ${action.type}`);
@@ -86,6 +115,8 @@ const Content = () => {
 
   const [circuitState, circuitsDispatch] = useReducer(circuitsReducer, {
     circuits,
+    filteredByTerm: [],
+    filteredByStatus: [],
     filteredCircuits: circuits
   });
   const nodeID = useLocalNodeState();
@@ -118,7 +149,7 @@ const Content = () => {
           placeholder="Filter"
           onKeyUp={event => {
             circuitsDispatch({
-              type: 'filter',
+              type: 'filterByTerm',
               filterCircuits,
               filter: {
                 filterTerm: event.target.value.toLowerCase()
