@@ -20,6 +20,8 @@ import mockCircuits from '../mockData/mockCircuits';
 import mockProposals from '../mockData/mockProposals';
 import { processCircuits } from '../data/processCircuits';
 
+import CircuitsTable from './circuitsTable/Table';
+
 import './Content.scss';
 
 const circuitsReducer = (state, action) => {
@@ -125,32 +127,10 @@ const Content = () => {
           }}
         />
       </div>
-      <div>
-        <table>
-          <tr>
-            <th>Circuit ID</th>
-            <th>Service count</th>
-            <th>Management Type</th>
-          </tr>
-          {circuitState.filteredCircuits.map(circuit => {
-            return (
-              <tr>
-                <td>{circuit.id}</td>
-                <td>
-                  {
-                    new Set(
-                      circuit.roster.map(service => {
-                        return service.service_type;
-                      })
-                    ).size
-                  }
-                </td>
-                <td>{circuit.managementType}</td>
-              </tr>
-            );
-          })}
-        </table>
-      </div>
+      <CircuitsTable
+        circuits={circuitState.filteredCircuits}
+        dispatch={circuitsDispatch}
+      />
     </div>
   );
 };
