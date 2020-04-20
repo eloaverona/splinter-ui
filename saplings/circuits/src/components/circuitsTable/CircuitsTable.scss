@@ -132,5 +132,32 @@
     .text-grey {
       color: var(--color-light-grey)
     }
+
+    .table-row {
+      td, .proposal-status {
+        font-size: 0.8rem;
+        vertical-align: middle;
+      }
+
+      .proposal-status {
+        display: flex;
+        flex-direction: column;
+
+        .status {
+          margin-top: 0.5rem;
+          font-size: inherit;
+
+          .status-icon {
+            margin-left: 0.5rem;
+          }
+        }
+      }
+
+      .ellipsis-overflow {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
   }
 }
