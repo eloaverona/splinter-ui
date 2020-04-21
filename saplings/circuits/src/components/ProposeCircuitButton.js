@@ -27,11 +27,9 @@ const ProposeCircuitButton = () => {
   );
 
   return (
-    <Link className="propose-link" to="/circuits/propose">
-      <button type="button" className="propose-circuit-btn">
-        {plusSign}
-        <span className="btn-text">Propose New Circuit</span>
-      </button>
+    <Link className="propose-circuit-btn" to="/circuits/propose">
+      {plusSign}
+      <span className="btn-text">Propose New Circuit</span>
     </Link>
   );
 };

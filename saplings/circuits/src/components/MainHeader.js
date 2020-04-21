@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import ProposeCircuitButton from './ProposeCircuitButton';
 import './MainHeader.scss';
 
