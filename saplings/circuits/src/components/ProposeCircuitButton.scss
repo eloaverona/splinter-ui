@@ -35,6 +35,10 @@
   }
 }
 
+.propose-circuit-btn:hover {
+  background: var(--color-primary-dark);
+}
+
 @media only screen and (max-width: 600px) {
   .propose-circuit-btn {
     height: 2rem;
