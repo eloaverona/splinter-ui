@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './ProposeCircuitButton.scss';
 
@@ -26,10 +27,12 @@ const ProposeCircuitButton = () => {
   );
 
   return (
-    <button type="button" className="propose-circuit-btn">
-      {plusSign}
-      <span className="btn-text">Propose New Circuit</span>
-    </button>
+    <Link className="propose-link" to="/circuits/propose">
+      <button type="button" className="propose-circuit-btn">
+        {plusSign}
+        <span className="btn-text">Propose New Circuit</span>
+      </button>
+    </Link>
   );
 };
 

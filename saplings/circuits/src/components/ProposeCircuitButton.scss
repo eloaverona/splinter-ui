@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
-.propose-circuit-btn {
-  align-items: center;
-  background: var(--color-primary);
-  border: none;
-  border-radius: 4px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  color: var(--color-text-on-dark);
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  height: 3rem;
-  width: 15rem;
+.propose-link {
+  text-decoration: none;
 
-  .add-sign {
-    font-size: 2rem;
-  }
-}
-
-@media only screen and (max-width: 600px) {
   .propose-circuit-btn {
-    height: 2rem;
-    width: auto;
-
-    // hide button text in small screens
-    .btn-text {
-      display: none;
-    }
+    align-items: center;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: var(--color-text-on-dark);
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 3rem;
+    width: 15rem;
 
     .add-sign {
-      font-size: 1rem;
+      font-size: 2rem;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .propose-circuit-btn {
+      height: 2rem;
+      width: auto;
+
+      // hide button text in small screens
+      .btn-text {
+        display: none;
+      }
+
+      .add-sign {
+        font-size: 1rem;
+      }
     }
   }
 }
