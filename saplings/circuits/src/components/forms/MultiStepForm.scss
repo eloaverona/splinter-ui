@@ -14,19 +14,33 @@
  * limitations under the License.
  */
 
-#product-sapling {
-  .multiStepForm {
+.multiStepForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+
+  .divider {
+    width: 100%;
+    background: var(--color-grey);
+    height: 2px;
+    margin: 2rem 0 0;
+  }
+
+  .form-header {
+    background: #333333;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
+    flex-direction: column;
+    color: #ffffff;
     width: 100%;
 
-    .divider {
+
+    h5 {
+      display: inline-block;
       width: 100%;
-      background: var(--color-grey);
-      height: 2px;
-      margin: 2rem 0 0;
+      border-bottom: 1px solid #ffffff;
+      margin: 36px 0;
     }
 
     .info {
@@ -35,17 +49,8 @@
       height: 100%;
       padding: 0 48px;
       display: flex;
-      flex-direction: column;
-      background: #333333;
-      color: #ffffff;
+      flex-direction: row;
       border-radius: 5px 0 0 5px;
-
-      > h5 {
-        display: inline-block;
-        width: 100%;
-        border-bottom: 1px solid #ffffff;
-        margin: 36px 0;
-      }
 
       .stepCounter {
         width: 100%;
@@ -132,78 +137,81 @@
         }
       }
     }
+  }
 
-    .formWrapper {
+
+
+
+  .formWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 0 1 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    form {
       display: flex;
       flex-direction: column;
-      height: 100%;
       flex: 0 1 100%;
-      align-items: center;
-      justify-content: space-between;
+      width: 100%;
+      padding: 0 5%;
+      overflow-y: auto;
 
-      form {
+      .step {
         display: flex;
         flex-direction: column;
-        flex: 0 1 100%;
+        margin-top: 1rem;
+      }
+
+      .form-group {
         width: 100%;
-        padding: 0 5%;
-        overflow-y: auto;
-
-        .step {
-          display: flex;
-          flex-direction: column;
-          margin-top: 1rem;
-        }
-
-        .form-group {
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-
-          .grid-input {
-            flex: 0 1 40%;
-
-            &:not(:last-child) {
-              margin-right: 5%;
-            }
-          }
-
-          button {
-            height: 34px;
-            margin-top: 1.5rem;
-          }
-        }
-      }
-
-      .actions {
         display: flex;
-        width: 90%;
         flex-direction: row;
-        justify-content: flex-end;
-        padding: 1.5rem 0;
-        border-top: 1px solid #555555;
+        flex-wrap: wrap;
 
-        > * {
-          margin: 0 0.5rem;
+        .grid-input {
+          flex: 0 1 40%;
+
+          &:not(:last-child) {
+            margin-right: 5%;
+          }
+        }
+
+        button {
+          height: 34px;
+          margin-top: 1.5rem;
         }
       }
     }
 
-    h6 {
-      margin: 1rem 0;
-    }
+    .actions {
+      display: flex;
+      width: 90%;
+      flex-direction: row;
+      justify-content: flex-end;
+      padding: 1.5rem 0;
+      border-top: 1px solid #555555;
 
-    button {
-      height: 38px;
-      width: fit-content;
-      border: 1px solid inset var(--color-grey);
-
-      &.confirm,
-      &.submit {
-        background: var(--color-secondary);
-        border: none;
+      > * {
+        margin: 0 0.5rem;
       }
+    }
+  }
+
+  h6 {
+    margin: 1rem 0;
+  }
+
+  button {
+    height: 38px;
+    width: fit-content;
+    border: 1px solid inset var(--color-grey);
+
+    &.confirm,
+    &.submit {
+      background: var(--color-secondary);
+      border: none;
     }
   }
 }

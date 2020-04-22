@@ -87,31 +87,33 @@ export function MultiStepForm({
 
   return (
     <div className="multiStepForm" style={style}>
-      <div className="info">
+      <div className="form-header">
         <h5>{formName}</h5>
-        <div className="stepCounter">
-          <div
-            className="progressTracker"
-            style={{
-              '--form-progress': `${((step - 1) / (children.length - 1)) *
-                100}%`
-            }}
-          />
-          <div className="steps">
-            {children.map((s, i) => (
-              <div
-                className={classnames(
-                  'step',
-                  i === step - 1 && 'active',
-                  i < step - 1 && 'entered'
-                )}
-              >
-                <div className="stepBox">
-                  {i < step - 1 && <FontAwesomeIcon icon="check" />}
+        <div className="info">
+          <div className="stepCounter">
+            <div
+              className="progressTracker"
+              style={{
+                '--form-progress': `${((step - 1) / (children.length - 1)) *
+                  100}%`
+              }}
+            />
+            <div className="steps">
+              {children.map((s, i) => (
+                <div
+                  className={classnames(
+                    'step',
+                    i === step - 1 && 'active',
+                    i < step - 1 && 'entered'
+                  )}
+                >
+                  <div className="stepBox">
+                    {i < step - 1 && <FontAwesomeIcon icon="check" />}
+                  </div>
+                  <span className="stepLabel">{s.props.label}</span>
                 </div>
-                <span className="stepLabel">{s.props.label}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
