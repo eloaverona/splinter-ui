@@ -57,7 +57,7 @@ function App() {
               <Content />
             </Route>
             <Route path="/circuits/propose">
-              <h4>Propose circuit</h4>
+              <h4>Propose Circuit</h4>
             </Route>
           </Switch>
         </Router>
