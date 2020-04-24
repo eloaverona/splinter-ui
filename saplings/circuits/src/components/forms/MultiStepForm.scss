@@ -82,10 +82,7 @@
           margin-right: auto;
 
           .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-height: 1.5rem;
+            min-height: 2rem;
 
             .stepBox {
               display: flex;
@@ -102,9 +99,10 @@
             }
 
             .stepLabel {
-              padding-left: 0.5rem;
               font-weight: 300;
+              position: absolute;
               font-style: italic;
+              width: fit-content;
               color: rgba(255, 255, 255, 0.6);
             }
 

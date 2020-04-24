@@ -32,6 +32,9 @@ export function ProposeCircuitForm() {
       <Step step={2} label="Test input 2">
         <StepInput type="file" accept="text/csv" id="add-master-data-file" />
       </Step>
+      <Step step={3} label="Test input 3">
+        <StepInput type="file" accept="text/csv" id="add-master-data-file" />
+      </Step>
     </MultiStepForm>
   );
 }
