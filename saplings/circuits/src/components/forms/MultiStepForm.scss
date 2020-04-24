@@ -58,7 +58,7 @@
           display: none;
           color: var(--color-primary);
           text-align: center;
-          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
         }
 
         .progressTracker {
@@ -220,18 +220,28 @@
 }
 
 @media only screen and (max-width: 600px) {
+  // .stepCounter {
+  //   text-align: center;
+  // }
   .completion-percentage {
     display: block !important;
   }
-  .step {
-     &:not(.active) {
-      display: none;
-    }
-    &.active {
-      color: green;
-      .stepBox {
-        visibility: hidden;
+  .steps {
+    width: 100% !important;
+    .step {
+       &:not(.active) {
+        display: none;
+      }
+      &.active {
+        .stepLabel {
+          width: 100% !important;
+          text-align: center;
+        }
+        .stepBox {
+          visibility: hidden;
+        }
       }
     }
   }
+
 }
