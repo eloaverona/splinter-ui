@@ -16,18 +16,35 @@
 
 import React from 'react';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
+import { useNodeRegistryState } from '../../state/nodeRegistry';
 
-//import './forms.scss';
+// import './forms.scss';
 
 export function ProposeCircuitForm() {
+  const nodes = useNodeRegistryState();
+  console.log("NODES");
+  console.log(nodes);
+  nodes.map(node => console.log(node));
   return (
     <MultiStepForm
       formName="Propose Circuit"
       handleSubmit={() => {}}
       disabled="false"
     >
-      <Step step={1} label="Text input">
-        <StepInput type="text" label="Test" name="test" />
+      <Step step={1} label="Add Nodes">
+        <div className="node-registry-wrapper">
+          <input type="text" placeholder="test" />
+          <div className="available-nodes">
+            <ul>
+              {nodes.map(node => (
+                <li className="node-item">
+                  <span className="node-name">{node.displayName}</span>
+                  <span className="node-id">{node.identity}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </Step>
       <Step step={2} label="Test input 2">
         <StepInput type="file" accept="text/csv" id="add-master-data-file" />
