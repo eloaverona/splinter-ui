@@ -29,8 +29,11 @@ const NodeCard = ({ node, isLocal }) => {
 
   return (
     <div className="node-card">
-      <span className="node-name">{node.displayName}</span>
-      <span className="node-id">{node.identity}</span>
+      <span className="node-field node-name">
+        <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
+        {node.displayName}
+      </span>
+      <span className="node-field node-id">{node.identity}</span>
       <span className="node-local">{isLocal ? 'Local' : ''}</span>
     </div>
   );

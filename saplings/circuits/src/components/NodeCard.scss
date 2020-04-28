@@ -21,15 +21,24 @@
    border: 1px solid var(--color-primary-light);
    border-radius: 12px;
 
-   span {
+   .node-field {
      width: 100%;
    }
 
    .node-name {
      background-color: var(--color-primary-light);
+     text-align: center;
    }
 
    .node-id {
 
+   }
+
+   .node-local {
+     border: 1px solid var(--color-grey);
+     border-radius: 12px;
+     padding: 0.5rem;
+     font-size: 0.8rem;
+     text-align: center;
    }
  }

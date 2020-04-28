@@ -21,6 +21,8 @@ import { useLocalNodeState } from '../../state/localNode';
 
 import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
+import { Chip, Chips } from '../Chips';
+
 import './forms.scss';
 
 export function ProposeCircuitForm() {
@@ -28,6 +30,7 @@ export function ProposeCircuitForm() {
   const localNodeID = useLocalNodeState();
   const [localNode] = nodes.filter(node => node.identity === localNodeID);
   console.log("localNode");
+
 
   console.log(localNode);
   return (
@@ -39,7 +42,9 @@ export function ProposeCircuitForm() {
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
           <div className="selected-nodes">
-            <NodeCard node={localNode} isLocal />
+            <Chips>
+              <Chip node={localNode} isLocal />
+            </Chips>
             <input
               type="text"
               placeholder="Find nodes"
