@@ -17,14 +17,19 @@
 import React from 'react';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
+import { useLocalNodeState } from '../../state/localNode';
+
 import nodeIcon from '../../images/node_icon.svg';
+import NodeCard from '../NodeCard';
 import './forms.scss';
 
 export function ProposeCircuitForm() {
   const nodes = useNodeRegistryState();
-  console.log("NODES");
-  console.log(nodes);
-  nodes.map(node => console.log(node));
+  const localNodeID = useLocalNodeState();
+  const [localNode] = nodes.filter(node => node.identity === localNodeID);
+  console.log("localNode");
+
+  console.log(localNode);
   return (
     <MultiStepForm
       formName="Propose Circuit"
@@ -34,6 +39,7 @@ export function ProposeCircuitForm() {
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
           <div className="selected-nodes">
+            <NodeCard node={localNode} />
             <input
               type="text"
               placeholder="Find nodes"
