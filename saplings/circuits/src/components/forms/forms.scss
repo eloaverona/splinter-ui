@@ -15,20 +15,44 @@
  */
 
 .node-registry-wrapper {
-  .available-nodes {
-    .node-item {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: baseline;
+  display: flex;
+  flex-direction: column;
 
-      .node-id {
-        font-size: 0.8rem;
-      }
-      .node-name {
-        color: var(--color-primary);
-        font-size: 1.2rem;
-        margin-right: 0.5rem;
+  .selected-nodes {
+    border: 1px solid var(--color-light-grey);
+    
+    .search-nodes-input {
+      width: 100%;
+      border: none;
+      outline: none;
+    }
+  }
+
+
+  .available-nodes {
+    width: 100%;
+
+    ul {
+      width: 100%;
+      padding: 0;
+
+      .node-item {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: baseline;
+        border: 1px solid var(--color-light-grey);
+        padding: 1rem;
+
+        .node-id {
+          font-size: 0.8rem;
+        }
+
+        .node-name {
+          color: var(--color-primary);
+          font-size: 1.2rem;
+          margin: 0.5rem;
+        }
       }
     }
   }

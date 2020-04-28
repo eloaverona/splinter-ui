@@ -33,12 +33,22 @@ export function ProposeCircuitForm() {
     >
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
-          <input type="text" placeholder="test" />
+          <div className="selected-nodes">
+            <input
+              type="text"
+              placeholder="Find nodes"
+              className="search-nodes-input"
+            />
+          </div>
           <div className="available-nodes">
             <ul>
               {nodes.map(node => (
                 <li className="node-item">
-                  <img src={nodeIcon} alt="Icon for a node" />
+                  <img
+                    src={nodeIcon}
+                    className="node-icon"
+                    alt="Icon for a node"
+                  />
                   <span className="node-name">{node.displayName}</span>
                   <span className="node-id">{node.identity}</span>
                 </li>
