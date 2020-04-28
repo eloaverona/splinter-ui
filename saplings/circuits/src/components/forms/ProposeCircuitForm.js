@@ -17,8 +17,8 @@
 import React from 'react';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
-
-// import './forms.scss';
+import nodeIcon from '../../images/node_icon.svg';
+import './forms.scss';
 
 export function ProposeCircuitForm() {
   const nodes = useNodeRegistryState();
@@ -38,6 +38,7 @@ export function ProposeCircuitForm() {
             <ul>
               {nodes.map(node => (
                 <li className="node-item">
+                  <img src={nodeIcon} alt="Icon for a node" />
                   <span className="node-name">{node.displayName}</span>
                   <span className="node-id">{node.identity}</span>
                 </li>
