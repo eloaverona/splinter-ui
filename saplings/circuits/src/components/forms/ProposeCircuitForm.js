@@ -39,7 +39,7 @@ export function ProposeCircuitForm() {
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
           <div className="selected-nodes">
-            <NodeCard node={localNode} />
+            <NodeCard node={localNode} isLocal />
             <input
               type="text"
               placeholder="Find nodes"
