@@ -23,7 +23,7 @@ import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
 import { Chip, Chips } from '../Chips';
 
-import './forms.scss';
+import './ProposeCircuitForm.scss';
 
 export function ProposeCircuitForm() {
   const nodes = useNodeRegistryState();

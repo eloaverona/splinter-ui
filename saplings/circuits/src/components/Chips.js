@@ -30,9 +30,6 @@ export function Chip({ node, isLocal, removeFn, data, deleteable }) {
   if (!node) {
     return '';
   }
-  console.log("deleteable");
-  console.log(deleteable);
-
   return (
     <div className="chip-group">
       <div className="chip">
@@ -59,18 +56,14 @@ Chips.defaultProps = {
 };
 
 Chip.propTypes = {
-  label: PropTypes.string,
   node: PropTypes.instanceOf(Node).isRequired,
   isLocal: PropTypes.bool,
   removeFn: PropTypes.func,
-  icon: PropTypes.node,
   data: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   deleteable: PropTypes.bool
 };
 
 Chip.defaultProps = {
-  label: '',
-  icon: '',
   isLocal: false,
   removeFn: undefined,
   data: undefined,
