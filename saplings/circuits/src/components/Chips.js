@@ -37,7 +37,11 @@ export function Chip({ node, isLocal, removeFn, data, deleteable }) {
         <span className="node-field node-name label">{node.displayName}</span>
         <span className={isLocal ? 'node-local' : 'hide'}>Local</span>
         {deleteable && (
-          <FontAwesomeIcon icon="times" className="delete" onClick={removeFn} />
+          <FontAwesomeIcon
+            icon="times"
+            className="delete"
+            onClick={removeFn}
+          />
         )}
       </div>
       <div className="chip-data">{data}</div>

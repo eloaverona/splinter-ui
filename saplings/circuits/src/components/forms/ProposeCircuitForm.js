@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
+import mockNodes from '../../mockData/nodes';
 
 import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
@@ -26,7 +27,8 @@ import { Chip, Chips } from '../Chips';
 import './ProposeCircuitForm.scss';
 
 export function ProposeCircuitForm() {
-  const nodes = useNodeRegistryState();
+  let nodes = useNodeRegistryState();
+  nodes.push(...mockNodes);
   const localNodeID = useLocalNodeState();
   const [localNode] = nodes.filter(node => node.identity === localNodeID);
   const [selectedNodes, setSelectedNodes] = useState({
@@ -37,6 +39,15 @@ export function ProposeCircuitForm() {
     setSelectedNodes(state => {
       state.nodes.push(node);
       return { ...state };
+    });
+  };
+
+  const removeNode = node => {
+    setSelectedNodes(state => {
+      const filteredNodes = state.nodes.filter(
+        item => item.identity !== node.identity
+      );
+      return { nodes: filteredNodes };
     });
   };
 
@@ -58,7 +69,14 @@ export function ProposeCircuitForm() {
             <Chips>
               {selectedNodes.nodes.map(node => {
                 const local = node.identity === localNodeID;
-                return <Chip node={node} isLocal={local} deleteable={!local} />;
+                return (
+                  <Chip
+                    node={node}
+                    isLocal={local}
+                    deleteable={!local}
+                    removeFn={() => removeNode(node)}
+                  />
+                );
               })}
               <input
                 type="text"

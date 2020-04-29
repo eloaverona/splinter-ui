@@ -33,13 +33,14 @@
     }
   }
 
-
   .available-nodes {
     width: 100%;
 
     ul {
       width: 100%;
       padding: 0;
+      overflow-y:scroll;
+      height: 100%;
 
       .node-item {
         display: flex;
