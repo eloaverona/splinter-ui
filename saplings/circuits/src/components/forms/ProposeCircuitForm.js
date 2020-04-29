@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
@@ -29,10 +29,42 @@ export function ProposeCircuitForm() {
   const nodes = useNodeRegistryState();
   const localNodeID = useLocalNodeState();
   const [localNode] = nodes.filter(node => node.identity === localNodeID);
-  console.log("localNode");
+  const [selectedNodes, setSelectedNodes] = useState({
+    nodes: []
+  });
 
+  const addNode = node => {
+    console.log("event");
 
-  console.log(localNode);
+    console.log(node);
+    // const userNodes = selectedNodes;
+    // userNodes.push(node);
+    setSelectedNodes(state => {
+      state.nodes.push(node);
+      return {
+        nodes: state.nodes
+      };
+    });
+  }
+
+  useEffect(() => {
+    console.log("CALLED HERE");
+    if (localNode) {
+      // const userNodes = selectedNodes;
+      // userNodes.push(localNode);
+      setSelectedNodes(state => {
+        state.nodes.push(localNode);
+        return {
+          nodes: state.nodes
+        };
+      });
+    }
+  }, [localNode]);
+
+  console.log("selectedNodes");
+
+  console.log(selectedNodes);
+
   return (
     <MultiStepForm
       formName="Propose Circuit"
@@ -42,9 +74,14 @@ export function ProposeCircuitForm() {
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
           <div className="selected-nodes">
-            <Chips>
-              <Chip node={localNode} isLocal />
-            </Chips>
+            {selectedNodes.nodes.map(node => {
+              const local = node.identity === localNodeID;
+              return (
+                <Chips>
+                  <Chip node={node} isLocal={local} deleteable={!local} />
+                </Chips>
+              );
+            })}
             <input
               type="text"
               placeholder="Find nodes"
@@ -54,7 +91,7 @@ export function ProposeCircuitForm() {
           <div className="available-nodes">
             <ul>
               {nodes.map(node => (
-                <li className="node-item">
+                <li className="node-item"  onClick={() => addNode(node)}>
                   <img
                     src={nodeIcon}
                     className="node-icon"
