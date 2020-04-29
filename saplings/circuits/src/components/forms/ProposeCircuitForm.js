@@ -89,6 +89,7 @@ export function ProposeCircuitForm() {
     >
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
+          <div className="title">Selected nodes</div>
           <div className="selected-nodes">
             <Chips>
               {selectedNodes.nodes.map(node => {
@@ -102,14 +103,17 @@ export function ProposeCircuitForm() {
                   />
                 );
               })}
+            </Chips>
+          </div>
+          <div className="available-nodes">
+            <div className="title">
+              Available nodes
               <input
                 type="text"
                 placeholder="Find nodes"
                 className="search-nodes-input"
               />
-            </Chips>
-          </div>
-          <div className="available-nodes">
+            </div>
             <ul>
               {availableNodes.nodes.map(node => (
                 <li className="node-item">
