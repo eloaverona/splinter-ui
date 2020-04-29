@@ -67,7 +67,10 @@ export function ProposeCircuitForm() {
 
   useEffect(() => {
     if (nodes) {
+      console.log("GOOT HERE");
       nodes.push(...mockNodes);
+      console.log(nodes);
+
       setAvailableNodes(state => {
         state.nodes.push(...nodes);
         return { ...state };
@@ -106,11 +109,11 @@ export function ProposeCircuitForm() {
             </Chips>
           </div>
           <div className="available-nodes">
-            <div className="title">
-              Available nodes
+            <div className="available-nodes-header">
+              <div className="title">Available nodes</div>
               <input
                 type="text"
-                placeholder="Find nodes"
+                placeholder="Filter available nodes"
                 className="search-nodes-input"
               />
             </div>
