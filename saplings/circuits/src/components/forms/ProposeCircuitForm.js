@@ -60,12 +60,12 @@ export function ProposeCircuitForm() {
                 const local = node.identity === localNodeID;
                 return <Chip node={node} isLocal={local} deleteable={!local} />;
               })}
+              <input
+                type="text"
+                placeholder="Find nodes"
+                className="search-nodes-input"
+              />
             </Chips>
-            <input
-              type="text"
-              placeholder="Find nodes"
-              className="search-nodes-input"
-            />
           </div>
           <div className="available-nodes">
             <ul>
