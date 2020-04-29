@@ -15,10 +15,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
 import mockNodes from '../../mockData/nodes';
+
 
 import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
@@ -38,6 +40,12 @@ export function ProposeCircuitForm() {
     filteredNodes: []
   });
 
+  const plusSign = (
+    <span className="add-sign">
+      <FontAwesomeIcon icon="plus" />
+    </span>
+  );
+
   const addNode = node => {
     setSelectedNodes(state => {
       state.nodes.push(node);
@@ -48,7 +56,7 @@ export function ProposeCircuitForm() {
       const filteredNodes = state.nodes.filter(
         item => item.identity !== node.identity
       );
-      return { ...state, nodes: filteredNodes };
+      return { ...state, filteredNodes };
     });
   };
 
@@ -61,7 +69,7 @@ export function ProposeCircuitForm() {
     });
 
     setAvailableNodes(state => {
-      state.nodes.push(node);
+      state.filteredNodes.push(node);
       return { ...state };
     });
   };
@@ -107,7 +115,14 @@ export function ProposeCircuitForm() {
     >
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
-          <div className="title">Selected nodes</div>
+          <div className="selected-nodes-header">
+            <div className="title">Selected nodes</div>
+            <button type="button" className="new-node-button">
+              {plusSign}
+              New node
+            </button>
+          </div>
+
           <div className="selected-nodes">
             <Chips>
               {selectedNodes.nodes.map(node => {
