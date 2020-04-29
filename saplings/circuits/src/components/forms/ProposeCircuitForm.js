@@ -27,11 +27,13 @@ import { Chip, Chips } from '../Chips';
 import './ProposeCircuitForm.scss';
 
 export function ProposeCircuitForm() {
-  let nodes = useNodeRegistryState();
-  nodes.push(...mockNodes);
+  const nodes = useNodeRegistryState();
   const localNodeID = useLocalNodeState();
   const [localNode] = nodes.filter(node => node.identity === localNodeID);
   const [selectedNodes, setSelectedNodes] = useState({
+    nodes: []
+  });
+  const [availableNodes, setAvailableNodes] = useState({
     nodes: []
   });
 
@@ -39,6 +41,13 @@ export function ProposeCircuitForm() {
     setSelectedNodes(state => {
       state.nodes.push(node);
       return { ...state };
+    });
+
+    setAvailableNodes(state => {
+      const filteredNodes = state.nodes.filter(
+        item => item.identity !== node.identity
+      );
+      return { nodes: filteredNodes };
     });
   };
 
@@ -49,7 +58,22 @@ export function ProposeCircuitForm() {
       );
       return { nodes: filteredNodes };
     });
+
+    setAvailableNodes(state => {
+      state.nodes.push(node);
+      return { ...state };
+    });
   };
+
+  useEffect(() => {
+    if (nodes) {
+      nodes.push(...mockNodes);
+      setAvailableNodes(state => {
+        state.nodes.push(...nodes);
+        return { ...state };
+      });
+    }
+  }, [nodes]);
 
   useEffect(() => {
     if (localNode) {
@@ -87,7 +111,7 @@ export function ProposeCircuitForm() {
           </div>
           <div className="available-nodes">
             <ul>
-              {nodes.map(node => (
+              {availableNodes.nodes.map(node => (
                 <li className="node-item">
                   <button type="button" onClick={() => addNode(node)}>
                     <img
