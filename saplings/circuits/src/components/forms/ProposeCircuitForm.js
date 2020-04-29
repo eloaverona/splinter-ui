@@ -34,36 +34,17 @@ export function ProposeCircuitForm() {
   });
 
   const addNode = node => {
-    console.log("event");
-
-    console.log(node);
-    // const userNodes = selectedNodes;
-    // userNodes.push(node);
     setSelectedNodes(state => {
       state.nodes.push(node);
-      return {
-        nodes: state.nodes
-      };
+      return { ...state };
     });
-  }
+  };
 
   useEffect(() => {
-    console.log("CALLED HERE");
     if (localNode) {
-      // const userNodes = selectedNodes;
-      // userNodes.push(localNode);
-      setSelectedNodes(state => {
-        state.nodes.push(localNode);
-        return {
-          nodes: state.nodes
-        };
-      });
+      addNode(localNode);
     }
   }, [localNode]);
-
-  console.log("selectedNodes");
-
-  console.log(selectedNodes);
 
   return (
     <MultiStepForm
@@ -74,14 +55,12 @@ export function ProposeCircuitForm() {
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
           <div className="selected-nodes">
-            {selectedNodes.nodes.map(node => {
-              const local = node.identity === localNodeID;
-              return (
-                <Chips>
-                  <Chip node={node} isLocal={local} deleteable={!local} />
-                </Chips>
-              );
-            })}
+            <Chips>
+              {selectedNodes.nodes.map(node => {
+                const local = node.identity === localNodeID;
+                return <Chip node={node} isLocal={local} deleteable={!local} />;
+              })}
+            </Chips>
             <input
               type="text"
               placeholder="Find nodes"
@@ -91,14 +70,16 @@ export function ProposeCircuitForm() {
           <div className="available-nodes">
             <ul>
               {nodes.map(node => (
-                <li className="node-item"  onClick={() => addNode(node)}>
-                  <img
-                    src={nodeIcon}
-                    className="node-icon"
-                    alt="Icon for a node"
-                  />
-                  <span className="node-name">{node.displayName}</span>
-                  <span className="node-id">{node.identity}</span>
+                <li className="node-item">
+                  <button type="button" onClick={() => addNode(node)}>
+                    <img
+                      src={nodeIcon}
+                      className="node-icon"
+                      alt="Icon for a node"
+                    />
+                    <span className="node-name">{node.displayName}</span>
+                    <span className="node-id">{node.identity}</span>
+                  </button>
                 </li>
               ))}
             </ul>
