@@ -33,10 +33,8 @@ export function Chip({ node, isLocal, removeFn, data, deleteable }) {
   return (
     <div className="chip-group">
       <div className="chip">
-        <span className="node-field node-name label">
-          <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
-          {node.displayName}
-        </span>
+        <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
+        <span className="node-field node-name label">{node.displayName}</span>
         <span className="node-local">{isLocal ? 'Local' : ''}</span>
         {deleteable && (
           <FontAwesomeIcon icon="times" className="delete" onClick={removeFn} />
