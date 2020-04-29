@@ -34,7 +34,8 @@ export function ProposeCircuitForm() {
     nodes: []
   });
   const [availableNodes, setAvailableNodes] = useState({
-    nodes: []
+    nodes: [],
+    filteredNodes: []
   });
 
   const addNode = node => {
@@ -47,7 +48,7 @@ export function ProposeCircuitForm() {
       const filteredNodes = state.nodes.filter(
         item => item.identity !== node.identity
       );
-      return { nodes: filteredNodes };
+      return { ...state, nodes: filteredNodes };
     });
   };
 
@@ -65,14 +66,28 @@ export function ProposeCircuitForm() {
     });
   };
 
+  const filterAvailableNodes = input => {
+    const filteredNodes = availableNodes.nodes.filter(node => {
+      if (node.identity.toLowerCase().indexOf(input) > -1) {
+        return true;
+      }
+      if (node.displayName.toLowerCase().indexOf(input) > -1) {
+        return true;
+      }
+      return false;
+    });
+
+    setAvailableNodes(state => {
+      return { ...state, filteredNodes };
+    });
+  };
+
   useEffect(() => {
     if (nodes) {
-      console.log("GOOT HERE");
       nodes.push(...mockNodes);
-      console.log(nodes);
-
       setAvailableNodes(state => {
         state.nodes.push(...nodes);
+        state.filteredNodes.push(...nodes);
         return { ...state };
       });
     }
@@ -115,10 +130,13 @@ export function ProposeCircuitForm() {
                 type="text"
                 placeholder="Filter available nodes"
                 className="search-nodes-input"
+                onKeyUp={event => {
+                  filterAvailableNodes(event.target.value.toLowerCase());
+                }}
               />
             </div>
             <ul>
-              {availableNodes.nodes.map(node => (
+              {availableNodes.filteredNodes.map(node => (
                 <li className="node-item">
                   <button type="button" onClick={() => addNode(node)}>
                     <img
