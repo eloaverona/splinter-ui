@@ -23,6 +23,8 @@ import mockNodes from '../../mockData/nodes';
 
 import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
+import { OverlayModal } from '../OverlayModal';
+
 import { Chip, Chips } from '../Chips';
 
 import './ProposeCircuitForm.scss';
@@ -101,6 +103,7 @@ const nodesReducer = (state, action) => {
 export function ProposeCircuitForm() {
   const allNodes = useNodeRegistryState();
   const localNodeID = useLocalNodeState();
+  const [modalActive, setModalActive] = useState(false);
   const [localNode] = allNodes.filter(node => node.identity === localNodeID);
   const [nodesState, setNodesState] = useReducer(nodesReducer, {
     nodes: [],
@@ -190,7 +193,11 @@ export function ProposeCircuitForm() {
                   }}
                 />
               </div>
-              <button type="button" className="new-node-button">
+              <button
+                type="button"
+                className="new-node-button"
+                onClick={() => setModalActive(true)}
+              >
                 {plusSign}
                 New node
               </button>
@@ -220,6 +227,9 @@ export function ProposeCircuitForm() {
             </ul>
           </div>
         </div>
+        <OverlayModal open={modalActive} closeFn={() => setModalActive(false)}>
+          {}
+        </OverlayModal>
       </Step>
       <Step step={2} label="Test input 2">
         <StepInput type="file" accept="text/csv" id="add-master-data-file" />
