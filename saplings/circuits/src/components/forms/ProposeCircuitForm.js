@@ -155,10 +155,6 @@ export function ProposeCircuitForm() {
         <div className="node-registry-wrapper">
           <div className="selected-nodes-header">
             <div className="title">Selected nodes</div>
-            <button type="button" className="new-node-button">
-              {plusSign}
-              New node
-            </button>
           </div>
 
           <div className="selected-nodes">
@@ -180,18 +176,24 @@ export function ProposeCircuitForm() {
           </div>
           <div className="available-nodes">
             <div className="available-nodes-header">
-              <div className="title">Available nodes</div>
-              <input
-                type="text"
-                placeholder="Filter available nodes"
-                className="search-nodes-input"
-                onKeyUp={event => {
-                  setNodesState({
-                    type: 'filter',
-                    input: event.target.value.toLowerCase()
-                  });
-                }}
-              />
+              <div className="title-wrapper">
+                <div className="title">Available nodes</div>
+                <input
+                  type="text"
+                  placeholder="Filter"
+                  className="search-nodes-input"
+                  onKeyUp={event => {
+                    setNodesState({
+                      type: 'filter',
+                      input: event.target.value.toLowerCase()
+                    });
+                  }}
+                />
+              </div>
+              <button type="button" className="new-node-button">
+                {plusSign}
+                New node
+              </button>
             </div>
             <ul>
               {nodesState.filteredNodes.nodes.map(node => (
