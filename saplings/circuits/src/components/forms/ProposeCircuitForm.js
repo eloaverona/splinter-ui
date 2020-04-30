@@ -24,6 +24,7 @@ import mockNodes from '../../mockData/nodes';
 import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
 import { OverlayModal } from '../OverlayModal';
+import { NewNodeForm } from './NewNodeForm';
 
 import { Chip, Chips } from '../Chips';
 
@@ -228,7 +229,7 @@ export function ProposeCircuitForm() {
           </div>
         </div>
         <OverlayModal open={modalActive} closeFn={() => setModalActive(false)}>
-          {}
+          <NewNodeForm />
         </OverlayModal>
       </Step>
       <Step step={2} label="Test input 2">

@@ -26,7 +26,9 @@ import {
   faExclamationCircle,
   faBusinessTime,
   faCheck,
-  faTimes
+  faTimes,
+  faPlusCircle,
+  faMinusCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -46,7 +48,9 @@ library.add(
   faExclamationCircle,
   faBusinessTime,
   faCheck,
-  faTimes
+  faTimes,
+  faPlusCircle,
+  faMinusCircle
 );
 
 function App() {
