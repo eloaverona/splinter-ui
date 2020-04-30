@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MultiStepForm, Step, StepInput } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
 import mockNodes from '../../mockData/nodes';
-
 
 import nodeIcon from '../../images/node_icon.svg';
 import NodeCard from '../NodeCard';
@@ -28,16 +27,89 @@ import { Chip, Chips } from '../Chips';
 
 import './ProposeCircuitForm.scss';
 
-export function ProposeCircuitForm() {
-  const nodes = useNodeRegistryState();
-  const localNodeID = useLocalNodeState();
-  const [localNode] = nodes.filter(node => node.identity === localNodeID);
-  const [selectedNodes, setSelectedNodes] = useState({
-    nodes: []
+const filterNodes = (nodes, input) => {
+  const filteredNodes = nodes.filter(node => {
+    if (node.identity.toLowerCase().indexOf(input) > -1) {
+      return true;
+    }
+    if (node.displayName.toLowerCase().indexOf(input) > -1) {
+      return true;
+    }
+    return false;
   });
-  const [availableNodes, setAvailableNodes] = useState({
+
+  return filteredNodes;
+};
+
+const nodesReducer = (state, action) => {
+  switch (action.type) {
+    case 'filter': {
+      const nodes = filterNodes(state.availableNodes, action.input);
+      const filteredNodes = {
+        nodes,
+        filteredBy: action.input
+      };
+      return { ...state, filteredNodes };
+    }
+    case 'select': {
+      const { node } = action;
+      state.selectedNodes.push(node);
+      const availableNodes = state.availableNodes.filter(
+        item => item.identity !== node.identity
+      );
+      const nodes = filterNodes(availableNodes, state.filteredNodes.filteredBy);
+      const filteredNodes = {
+        nodes,
+        filteredBy: state.filteredNodes.filteredBy
+      };
+
+      return { ...state, availableNodes, filteredNodes };
+    }
+    case 'removeSelect': {
+      const { node } = action;
+      const selectedNodes = state.selectedNodes.filter(
+        item => item.identity !== node.identity
+      );
+      state.availableNodes.push(node);
+      const nodes = filterNodes(
+        state.availableNodes,
+        state.filteredNodes.filteredBy
+      );
+      const filteredNodes = {
+        nodes,
+        filteredBy: state.filteredNodes.filteredBy
+      };
+      return { ...state, selectedNodes, filteredNodes };
+    }
+    case 'set': {
+      const { nodes } = action;
+      return {
+        ...state,
+        nodes,
+        availableNodes: nodes,
+        filteredNodes: {
+          nodes,
+          filteredBy: ''
+        }
+      };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
+export function ProposeCircuitForm() {
+  const allNodes = useNodeRegistryState();
+  const localNodeID = useLocalNodeState();
+  const [localNode] = allNodes.filter(node => node.identity === localNodeID);
+  const [nodesState, setNodesState] = useReducer(nodesReducer, {
     nodes: [],
-    filteredNodes: []
+    selectedNodes: [],
+    availableNodes: [],
+    filteredNodes: {
+      nodes: [],
+      filteredBy: ''
+    }
   });
 
   const plusSign = (
@@ -46,66 +118,32 @@ export function ProposeCircuitForm() {
     </span>
   );
 
-  const addNode = node => {
-    setSelectedNodes(state => {
-      state.nodes.push(node);
-      return { ...state };
-    });
-
-    setAvailableNodes(state => {
-      const filteredNodes = state.nodes.filter(
-        item => item.identity !== node.identity
-      );
-      return { ...state, filteredNodes };
-    });
-  };
-
-  const removeNode = node => {
-    setSelectedNodes(state => {
-      const filteredNodes = state.nodes.filter(
-        item => item.identity !== node.identity
-      );
-      return { nodes: filteredNodes };
-    });
-
-    setAvailableNodes(state => {
-      state.filteredNodes.push(node);
-      return { ...state };
-    });
-  };
-
-  const filterAvailableNodes = input => {
-    const filteredNodes = availableNodes.nodes.filter(node => {
-      if (node.identity.toLowerCase().indexOf(input) > -1) {
-        return true;
-      }
-      if (node.displayName.toLowerCase().indexOf(input) > -1) {
-        return true;
-      }
-      return false;
-    });
-
-    setAvailableNodes(state => {
-      return { ...state, filteredNodes };
-    });
-  };
-
   useEffect(() => {
-    if (nodes) {
-      nodes.push(...mockNodes);
-      setAvailableNodes(state => {
-        state.nodes.push(...nodes);
-        state.filteredNodes.push(...nodes);
-        return { ...state };
+    if (allNodes) {
+      allNodes.push(...mockNodes);
+      setNodesState({
+        type: 'set',
+        nodes: allNodes
       });
     }
-  }, [nodes]);
+  }, [allNodes]);
 
   useEffect(() => {
     if (localNode) {
-      addNode(localNode);
+      setNodesState({
+        type: 'select',
+        node: localNode
+      });
     }
   }, [localNode]);
+
+  // useEffect(() => {
+  //   console.log("GOT HERE USE EFFTC FOR FILTE")
+  //   setNodesState({
+  //     type: 'filter',
+  //     input: nodesState.filteredNodes.filteredBy
+  //   });
+  // }, [nodesState.availableNodes]);
 
   return (
     <MultiStepForm
@@ -125,14 +163,16 @@ export function ProposeCircuitForm() {
 
           <div className="selected-nodes">
             <Chips>
-              {selectedNodes.nodes.map(node => {
+              {nodesState.selectedNodes.map(node => {
                 const local = node.identity === localNodeID;
                 return (
                   <Chip
                     node={node}
                     isLocal={local}
                     deleteable={!local}
-                    removeFn={() => removeNode(node)}
+                    removeFn={() => {
+                      setNodesState({ type: 'removeSelect', node });
+                    }}
                   />
                 );
               })}
@@ -146,14 +186,25 @@ export function ProposeCircuitForm() {
                 placeholder="Filter available nodes"
                 className="search-nodes-input"
                 onKeyUp={event => {
-                  filterAvailableNodes(event.target.value.toLowerCase());
+                  setNodesState({
+                    type: 'filter',
+                    input: event.target.value.toLowerCase()
+                  });
                 }}
               />
             </div>
             <ul>
-              {availableNodes.filteredNodes.map(node => (
+              {nodesState.filteredNodes.nodes.map(node => (
                 <li className="node-item">
-                  <button type="button" onClick={() => addNode(node)}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNodesState({
+                        type: 'select',
+                        node
+                      });
+                    }}
+                  >
                     <img
                       src={nodeIcon}
                       className="node-icon"
