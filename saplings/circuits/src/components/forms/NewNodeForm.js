@@ -16,6 +16,8 @@
 
 import React, { useState, useEffect, useReducer } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { postNodeRegistry } from '../../api/splinter';
+import './NewNodeForm.scss';
 
 const PlusButton = ({ actionFn }) => {
   const plusSign = (
@@ -48,7 +50,6 @@ const MinusButton = ({ actionFn, display }) => {
   );
 };
 
-
 export function NewNodeForm() {
   const [endpoints, setEndpoints] = useState({
     endpoints: [],
@@ -63,13 +64,31 @@ export function NewNodeForm() {
     return fields;
   };
 
+  const submitNode = async () => {
+    const node = {
+      identity: 'test',
+      endpoints: ['gsfsaf'],
+      display_name: 'test',
+      keys: [],
+      metadata: {
+        organization: 'dasda'
+      }
+    };
+    try {
+      await postNodeRegistry(node);
+    } catch (e) {
+      throw Error(`Error fetching posting node: ${e}`);
+    }
+  };
+
   return (
     <div className="new-node-form-wrapper">
-      <h5>New Node</h5>
-      <form>
-        <input type="text" placeholder="Node ID" />
-        <input type="text" placeholder="Display Name" />
-        {}
+      <div className="title">New Node</div>
+      <form className="new-node-form">
+        <div className="input-group">
+          <input type="text" placeholder="Node ID" />
+          <input type="text" placeholder="Display Name" />
+        </div>
         <label htmlFor="endpoint">Endpoints</label>
         {endpointField()}
         <PlusButton
@@ -83,6 +102,10 @@ export function NewNodeForm() {
           }}
           display={endpoints.count > 1}
         />
+        <button type="button">Cancel</button>
+        <button type="button" onClick={submitNode}>
+          Submit
+        </button>
       </form>
     </div>
   );
