@@ -141,14 +141,6 @@ export function ProposeCircuitForm() {
     }
   }, [localNode]);
 
-  // useEffect(() => {
-  //   console.log("GOT HERE USE EFFTC FOR FILTE")
-  //   setNodesState({
-  //     type: 'filter',
-  //     input: nodesState.filteredNodes.filteredBy
-  //   });
-  // }, [nodesState.availableNodes]);
-
   return (
     <MultiStepForm
       formName="Propose Circuit"

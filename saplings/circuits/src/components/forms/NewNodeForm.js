@@ -51,24 +51,39 @@ const MinusButton = ({ actionFn, display }) => {
 };
 
 export function NewNodeForm() {
-  const [endpoints, setEndpoints] = useState({
+  const [endpointState, setEndpoints] = useState({
     endpoints: [],
     count: 1
   });
 
+  const [displayName, setDisplayName] = useState('');
+  const [nodeID, setNodeID] = useState('');
+
   const endpointField = () => {
     const fields = [];
-    for (let i = 0; i < endpoints.count; i += 1) {
-      fields.push(<input type="text" name="endpoint" />);
+    for (let i = 0; i < endpointState.count; i += 1) {
+      fields.push(
+        <input
+          type="text"
+          name="endpoint"
+          onKeyUp={e => {
+            const input = e.target.value;
+            setEndpoints(state => {
+              state.endpoints[i] = input;
+              return { ...state };
+            });
+          }}
+        />
+      );
     }
     return fields;
   };
 
   const submitNode = async () => {
     const node = {
-      identity: 'test',
-      endpoints: ['gsfsaf'],
-      display_name: 'test',
+      identity: nodeID,
+      endpoints: endpointState.endpoints,
+      display_name: displayName,
       keys: [],
       metadata: {
         organization: 'dasda'
@@ -86,21 +101,35 @@ export function NewNodeForm() {
       <div className="title">New Node</div>
       <form className="new-node-form">
         <div className="input-group">
-          <input type="text" placeholder="Node ID" />
-          <input type="text" placeholder="Display Name" />
+          <input
+            type="text"
+            onKeyUp={e => setNodeID(e.target.value)}
+            placeholder="Node ID"
+          />
+          <input
+            type="text"
+            onKeyUp={e => setDisplayName(e.target.value)}
+            placeholder="Display Name"
+          />
         </div>
         <label htmlFor="endpoint">Endpoints</label>
         {endpointField()}
         <PlusButton
           actionFn={() => {
-            setEndpoints(state => ({ ...endpoints, count: state.count + 1 }));
+            setEndpoints(state => ({
+              ...endpointState,
+              count: state.count + 1
+            }));
           }}
         />
         <MinusButton
           actionFn={() => {
-            setEndpoints(state => ({ ...endpoints, count: state.count - 1 }));
+            setEndpoints(state => ({
+              ...endpointState,
+              count: state.count - 1
+            }));
           }}
-          display={endpoints.count > 1}
+          display={endpointState.count > 1}
         />
         <button type="button">Cancel</button>
         <button type="button" onClick={submitNode}>
