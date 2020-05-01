@@ -19,7 +19,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { postNodeRegistry } from '../../api/splinter';
 import './NewNodeForm.scss';
 
-const PlusButton = ({ actionFn }) => {
+const PlusButton = ({ actionFn, display }) => {
+  if (!display) {
+    return '';
+  }
+  
   const plusSign = (
     <span className="sign plus">
       <FontAwesomeIcon icon="plus-circle" />
@@ -27,7 +31,7 @@ const PlusButton = ({ actionFn }) => {
   );
 
   return (
-    <button type="button" onClick={actionFn}>
+    <button type="button" className="plus-button" onClick={actionFn}>
       {plusSign}
     </button>
   );
@@ -35,7 +39,7 @@ const PlusButton = ({ actionFn }) => {
 
 const MinusButton = ({ actionFn, display }) => {
   if (!display) {
-    return ''
+    return '';
   }
   const minusSign = (
     <span className="sign minus">
@@ -44,7 +48,7 @@ const MinusButton = ({ actionFn, display }) => {
   );
 
   return (
-    <button type="button" onClick={actionFn}>
+    <button className="minus-button" type="button" onClick={actionFn}>
       {minusSign}
     </button>
   );
@@ -63,17 +67,37 @@ export function NewNodeForm() {
     const fields = [];
     for (let i = 0; i < endpointState.count; i += 1) {
       fields.push(
-        <input
-          type="text"
-          name="endpoint"
-          onKeyUp={e => {
-            const input = e.target.value;
-            setEndpoints(state => {
-              state.endpoints[i] = input;
-              return { ...state };
-            });
-          }}
-        />
+        <div className="endpoint-input-wrapper">
+          <input
+            type="text"
+            name="endpoint"
+            onKeyUp={e => {
+              const input = e.target.value;
+              setEndpoints(state => {
+                state.endpoints[i] = input;
+                return { ...state };
+              });
+            }}
+          />
+          <PlusButton
+            actionFn={() => {
+              setEndpoints(state => ({
+                ...endpointState,
+                count: state.count + 1
+              }));
+            }}
+            display={i === endpointState.count - 1}
+          />
+          <MinusButton
+            actionFn={() => {
+              setEndpoints(state => ({
+                ...endpointState,
+                count: state.count - 1
+              }));
+            }}
+            display={i > 0}
+          />
+        </div>
       );
     }
     return fields;
@@ -112,25 +136,9 @@ export function NewNodeForm() {
             placeholder="Display Name"
           />
         </div>
-        <label htmlFor="endpoint">Endpoints</label>
+        <div className="endpoints-wrapper"> </div>
+        <div className="label">Endpoints</div>
         {endpointField()}
-        <PlusButton
-          actionFn={() => {
-            setEndpoints(state => ({
-              ...endpointState,
-              count: state.count + 1
-            }));
-          }}
-        />
-        <MinusButton
-          actionFn={() => {
-            setEndpoints(state => ({
-              ...endpointState,
-              count: state.count - 1
-            }));
-          }}
-          display={endpointState.count > 1}
-        />
         <button type="button">Cancel</button>
         <button type="button" onClick={submitNode}>
           Submit
