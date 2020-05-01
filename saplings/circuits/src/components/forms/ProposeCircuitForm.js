@@ -221,7 +221,7 @@ export function ProposeCircuitForm() {
           </div>
         </div>
         <OverlayModal open={modalActive} closeFn={() => setModalActive(false)}>
-          <NewNodeForm />
+          <NewNodeForm closeFn={() => setModalActive(false)} />
         </OverlayModal>
       </Step>
       <Step step={2} label="Test input 2">

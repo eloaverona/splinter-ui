@@ -129,7 +129,7 @@ const metadataReducer = (state, action) => {
   }
 };
 
-export function NewNodeForm() {
+export function NewNodeForm({ closeFn }) {
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
     endpoints: ['']
   });
@@ -339,7 +339,7 @@ export function NewNodeForm() {
         <div className="label">Metadata</div>
         {metadataField()}
         <div className="form-btn-wrapper">
-          <button type="button" className="form-btn cancel">
+          <button type="button" className="form-btn cancel" onClick={closeFn}>
             Cancel
           </button>
           <button
