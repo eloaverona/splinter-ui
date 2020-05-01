@@ -68,11 +68,29 @@ const endpointsReducer = (state, action) => {
     case 'set-field-value': {
       const { input, index } = action;
       const newState = state;
-      console.log("input");
-
-      console.log(input);
-
       newState.endpoints[index] = input;
+      return { ...newState };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
+const keysReducer = (state, action) => {
+  switch (action.type) {
+    case 'add-field': {
+      state.keys.push('');
+      return { ...state };
+    }
+    case 'remove-field': {
+      const { index } = action;
+      state.keys.splice(index, 1);
+      return { ...state };
+    }
+    case 'set-field-value': {
+      const { input, index } = action;
+      const newState = state;
+      newState.keys[index] = input;
       return { ...newState };
     }
     default:
@@ -83,6 +101,9 @@ const endpointsReducer = (state, action) => {
 export function NewNodeForm() {
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
     endpoints: ['']
+  });
+  const [keysState, setKeys] = useReducer(keysReducer, {
+    keys: ['']
   });
 
   const [displayName, setDisplayName] = useState('');
@@ -129,12 +150,53 @@ export function NewNodeForm() {
     });
   };
 
+  const keysField = () => {
+    return keysState.keys.map((endpoint, i) => {
+      const currentValue = endpoint;
+
+      return (
+        <div className="endpoint-input-wrapper">
+          <input
+            type="text"
+            name="endpoint"
+            value={currentValue}
+            onChange={e => {
+              const input = e.target.value;
+              setKeys({
+                type: 'set-field-value',
+                input,
+                index: i
+              });
+            }}
+          />
+          <PlusButton
+            actionFn={() => {
+              setKeys({
+                type: 'add-field'
+              });
+            }}
+            display={i === keysState.keys.length - 1}
+          />
+          <MinusButton
+            actionFn={() => {
+              setKeys({
+                type: 'remove-field',
+                index: i
+              });
+            }}
+            display={i > 0}
+          />
+        </div>
+      );
+    });
+  };
+
   const submitNode = async () => {
     const node = {
       identity: nodeID,
       endpoints: endpointState.endpoints.filter(endpoint => endpoint !== ''),
       display_name: displayName,
-      keys: [],
+      keys: keysState.keys.filter(key => key !== ''),
       metadata: {
         organization: 'dasda'
       }
@@ -163,8 +225,16 @@ export function NewNodeForm() {
           />
         </div>
         <div className="endpoints-wrapper"> </div>
-        <div className="label">Endpoints</div>
-        {endpointField()}
+        <div className="input-group">
+          <div>
+            <div className="label">Endpoints</div>
+            {endpointField()}
+          </div>
+          <div>
+            <div className="label">Public keys allowed</div>
+            {keysField()}
+          </div>
+        </div>
         <button type="button">Cancel</button>
         <button type="button" onClick={submitNode}>
           Submit
