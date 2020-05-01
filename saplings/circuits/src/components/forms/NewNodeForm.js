@@ -114,7 +114,7 @@ export function NewNodeForm() {
       const currentValue = endpoint;
 
       return (
-        <div className="endpoint-input-wrapper">
+        <div className="input-wrapper">
           <input
             type="text"
             name="endpoint"
@@ -155,7 +155,7 @@ export function NewNodeForm() {
       const currentValue = endpoint;
 
       return (
-        <div className="endpoint-input-wrapper">
+        <div className="input-wrapper">
           <input
             type="text"
             name="endpoint"
@@ -213,16 +213,20 @@ export function NewNodeForm() {
       <div className="title">New Node</div>
       <form className="new-node-form">
         <div className="input-group">
-          <input
-            type="text"
-            onKeyUp={e => setNodeID(e.target.value)}
-            placeholder="Node ID"
-          />
-          <input
-            type="text"
-            onKeyUp={e => setDisplayName(e.target.value)}
-            placeholder="Display Name"
-          />
+          <div className="input-wrapper">
+            <input
+              type="text"
+              onKeyUp={e => setNodeID(e.target.value)}
+              placeholder="Node ID"
+            />
+          </div>
+          <div className="input-wrapper">
+            <input
+              type="text"
+              onKeyUp={e => setDisplayName(e.target.value)}
+              placeholder="Display Name"
+            />
+          </div>
         </div>
         <div className="endpoints-wrapper"> </div>
         <div className="input-group">
