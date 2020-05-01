@@ -98,12 +98,51 @@ const keysReducer = (state, action) => {
   }
 };
 
+const metadataReducer = (state, action) => {
+  switch (action.type) {
+    case 'add-field': {
+      state.metadata.push({
+        key: '',
+        value: ''
+      });
+      return { ...state };
+    }
+    case 'remove-field': {
+      const { index } = action;
+      state.metadata.splice(index, 1);
+      return { ...state };
+    }
+    case 'set-field-key': {
+      const newState = state;
+      const { key, index } = action;
+      newState.metadata[index].key = key;
+      return { ...newState };
+    }
+    case 'set-field-value': {
+      const newState = state;
+      const { value, index } = action;
+      newState.metadata[index].value = value;
+      return { ...newState };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
 export function NewNodeForm() {
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
     endpoints: ['']
   });
   const [keysState, setKeys] = useReducer(keysReducer, {
     keys: ['']
+  });
+  const [metadataState, setMetadata] = useReducer(metadataReducer, {
+    metadata: [
+      {
+        key: '',
+        value: ''
+      }
+    ]
   });
 
   const [displayName, setDisplayName] = useState('');
@@ -151,8 +190,8 @@ export function NewNodeForm() {
   };
 
   const keysField = () => {
-    return keysState.keys.map((endpoint, i) => {
-      const currentValue = endpoint;
+    return keysState.keys.map((key, i) => {
+      const currentValue = key;
 
       return (
         <div className="input-wrapper">
@@ -191,15 +230,75 @@ export function NewNodeForm() {
     });
   };
 
+  const metadataField = () => {
+    return metadataState.metadata.map((metada, i) => {
+      const { key, value } = metada;
+
+      return (
+        <div className="input-wrapper">
+          <input
+            type="text"
+            name="key"
+            value={key}
+            placeholder="Key"
+            onChange={e => {
+              const input = e.target.value;
+              setMetadata({
+                type: 'set-field-key',
+                key: input,
+                index: i
+              });
+            }}
+          />
+          <input
+            type="text"
+            name="value"
+            value={value}
+            placeholder="Value"
+            onChange={e => {
+              const input = e.target.value;
+              setMetadata({
+                type: 'set-field-value',
+                value: input,
+                index: i
+              });
+            }}
+          />
+          <PlusButton
+            actionFn={() => {
+              setMetadata({
+                type: 'add-field'
+              });
+            }}
+            display={i === metadataState.metadata.length - 1}
+          />
+          <MinusButton
+            actionFn={() => {
+              setMetadata({
+                type: 'remove-field',
+                index: i
+              });
+            }}
+            display={i > 0}
+          />
+        </div>
+      );
+    });
+  };
+
   const submitNode = async () => {
+    const metadata = {};
+    metadataState.metadata.forEach(item => {
+      if (item.key.length !== 0) {
+        metadata[item.key] = item.value;
+      }
+    });
     const node = {
       identity: nodeID,
       endpoints: endpointState.endpoints.filter(endpoint => endpoint !== ''),
       display_name: displayName,
       keys: keysState.keys.filter(key => key !== ''),
-      metadata: {
-        organization: 'dasda'
-      }
+      metadata
     };
     try {
       await postNodeRegistry(node);
@@ -239,6 +338,8 @@ export function NewNodeForm() {
             {keysField()}
           </div>
         </div>
+        <div className="label">Metadata</div>
+        {metadataField()}
         <button type="button">Cancel</button>
         <button type="button" onClick={submitNode}>
           Submit
