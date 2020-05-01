@@ -23,7 +23,7 @@ const PlusButton = ({ actionFn, display }) => {
   if (!display) {
     return '';
   }
-  
+
   const plusSign = (
     <span className="sign plus">
       <FontAwesomeIcon icon="plus-circle" />
@@ -54,59 +54,85 @@ const MinusButton = ({ actionFn, display }) => {
   );
 };
 
+const endpointsReducer = (state, action) => {
+  switch (action.type) {
+    case 'add-field': {
+      state.endpoints.push('');
+      return { ...state };
+    }
+    case 'remove-field': {
+      const { index } = action;
+      state.endpoints.splice(index, 1);
+      return { ...state };
+    }
+    case 'set-field-value': {
+      const { input, index } = action;
+      const newState = state;
+      console.log("input");
+
+      console.log(input);
+
+      newState.endpoints[index] = input;
+      return { ...newState };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
 export function NewNodeForm() {
-  const [endpointState, setEndpoints] = useState({
-    endpoints: [],
-    count: 1
+  const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
+    endpoints: ['']
   });
 
   const [displayName, setDisplayName] = useState('');
   const [nodeID, setNodeID] = useState('');
 
   const endpointField = () => {
-    const fields = [];
-    for (let i = 0; i < endpointState.count; i += 1) {
-      fields.push(
+    return endpointState.endpoints.map((endpoint, i) => {
+      const currentValue = endpoint;
+
+      return (
         <div className="endpoint-input-wrapper">
           <input
             type="text"
             name="endpoint"
-            onKeyUp={e => {
+            value={currentValue}
+            onChange={e => {
               const input = e.target.value;
-              setEndpoints(state => {
-                state.endpoints[i] = input;
-                return { ...state };
+              setEndpoints({
+                type: 'set-field-value',
+                input,
+                index: i
               });
             }}
           />
           <PlusButton
             actionFn={() => {
-              setEndpoints(state => ({
-                ...endpointState,
-                count: state.count + 1
-              }));
+              setEndpoints({
+                type: 'add-field'
+              });
             }}
-            display={i === endpointState.count - 1}
+            display={i === endpointState.endpoints.length - 1}
           />
           <MinusButton
             actionFn={() => {
-              setEndpoints(state => ({
-                ...endpointState,
-                count: state.count - 1
-              }));
+              setEndpoints({
+                type: 'remove-field',
+                index: i
+              });
             }}
             display={i > 0}
           />
         </div>
       );
-    }
-    return fields;
+    });
   };
 
   const submitNode = async () => {
     const node = {
       identity: nodeID,
-      endpoints: endpointState.endpoints,
+      endpoints: endpointState.endpoints.filter(endpoint => endpoint !== ''),
       display_name: displayName,
       keys: [],
       metadata: {
@@ -116,7 +142,7 @@ export function NewNodeForm() {
     try {
       await postNodeRegistry(node);
     } catch (e) {
-      throw Error(`Error fetching posting node: ${e}`);
+      throw Error(`Error posting node: ${e}`);
     }
   };
 
