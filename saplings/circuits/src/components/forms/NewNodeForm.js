@@ -313,18 +313,16 @@ export function NewNodeForm() {
       <form className="new-node-form">
         <div className="input-group">
           <div className="input-wrapper">
+            <div className="label">Node ID</div>
             <input
               type="text"
               onKeyUp={e => setNodeID(e.target.value)}
-              placeholder="Node ID"
+              required
             />
           </div>
           <div className="input-wrapper">
-            <input
-              type="text"
-              onKeyUp={e => setDisplayName(e.target.value)}
-              placeholder="Display Name"
-            />
+            <div className="label">Display Name</div>
+            <input type="text" onKeyUp={e => setDisplayName(e.target.value)} />
           </div>
         </div>
         <div className="endpoints-wrapper"> </div>
@@ -334,16 +332,24 @@ export function NewNodeForm() {
             {endpointField()}
           </div>
           <div>
-            <div className="label">Public keys allowed</div>
+            <div className="label">Allowed public keys</div>
             {keysField()}
           </div>
         </div>
         <div className="label">Metadata</div>
         {metadataField()}
-        <button type="button">Cancel</button>
-        <button type="button" onClick={submitNode}>
-          Submit
-        </button>
+        <div className="form-btn-wrapper">
+          <button type="button" className="form-btn cancel">
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="form-btn submit"
+            onClick={submitNode}
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );

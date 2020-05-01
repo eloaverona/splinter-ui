@@ -26,6 +26,20 @@
     display: flex;
     flex-direction: column;
 
+    .form-btn-wrapper {
+      display: flex;
+      flex-direction: row;
+      margin: 1rem;
+      align-self: flex-end;
+
+      .form-btn {
+        margin-right: 0.5rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+    }
+
+
     .label {
       font-size: 0.8rem;
       color: var(--color-grey);
@@ -35,11 +49,10 @@
     .input-group {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
     }
 
     .input-wrapper {
-      margin-right: 1rem;
-
       .minus-button {
         visibility: hidden;
         color: var(--color-attention);
