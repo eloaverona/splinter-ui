@@ -44,17 +44,10 @@
       grid-column-end: 3;
     }
 
-
     .label {
       font-size: 0.8rem;
       color: var(--color-grey);
       margin: 2rem 2rem 0 0;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
     }
 
     .input-wrapper {
@@ -90,6 +83,15 @@
       font-size: 0.8rem;
       margin: 0.5rem 0.5rem 0 0;
 
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .new-node-form-wrapper {
+    .new-node-form {
+      display: flex;
+      flex-direction: column;
     }
   }
 }
