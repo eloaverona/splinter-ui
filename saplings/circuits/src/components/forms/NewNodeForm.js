@@ -306,6 +306,14 @@ export function NewNodeForm({ closeFn }) {
     });
   };
 
+  const clearState = () => {
+    setDisplayName('');
+    setNodeID('');
+    setMetadata({ type: 'clear' });
+    setEndpoints({ type: 'clear' });
+    setKeys({ type: 'clear' });
+  };
+
   const submitNode = async () => {
     const metadata = {};
     metadataState.metadata.forEach(item => {
@@ -322,17 +330,12 @@ export function NewNodeForm({ closeFn }) {
     };
     try {
       await postNodeRegistry(node);
+      clearState();
+      console.log("clearState");
+      closeFn();
     } catch (e) {
       throw Error(`Error posting node: ${e}`);
     }
-  };
-
-  const clearState = () => {
-    setDisplayName('');
-    setNodeID('');
-    setMetadata({ type: 'clear' });
-    setEndpoints({ type: 'clear' });
-    setKeys({ type: 'clear' });
   };
 
   return (

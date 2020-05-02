@@ -70,7 +70,7 @@ export function post(url, node, headerFn) {
         statusText: request.statusText,
         headers: request.getAllResponseHeaders(),
         data: request.responseText,
-        json: JSON.parse(request.responseText)
+        json: JSON.parse(request.responseText || '{}')
       });
     };
 
