@@ -71,6 +71,11 @@ const endpointsReducer = (state, action) => {
       newState.endpoints[index] = input;
       return { ...newState };
     }
+    case 'clear': {
+      return {
+        endpoints: ['']
+      };
+    }
     default:
       throw new Error(`unhandled action type: ${action.type}`);
   }
@@ -92,6 +97,11 @@ const keysReducer = (state, action) => {
       const newState = state;
       newState.keys[index] = input;
       return { ...newState };
+    }
+    case 'clear': {
+      return {
+        keys: ['']
+      };
     }
     default:
       throw new Error(`unhandled action type: ${action.type}`);
@@ -123,6 +133,16 @@ const metadataReducer = (state, action) => {
       const { value, index } = action;
       newState.metadata[index].value = value;
       return { ...newState };
+    }
+    case 'clear': {
+      return {
+        metadata: [
+          {
+            key: '',
+            value: ''
+          }
+        ]
+      };
     }
     default:
       throw new Error(`unhandled action type: ${action.type}`);
@@ -307,6 +327,14 @@ export function NewNodeForm({ closeFn }) {
     }
   };
 
+  const clearState = () => {
+    setDisplayName('');
+    setNodeID('');
+    setMetadata({ type: 'clear' });
+    setEndpoints({ type: 'clear' });
+    setKeys({ type: 'clear' });
+  };
+
   return (
     <div className="new-node-form-wrapper">
       <div className="title">New Node</div>
@@ -315,13 +343,18 @@ export function NewNodeForm({ closeFn }) {
           <div className="label">Node ID</div>
           <input
             type="text"
-            onKeyUp={e => setNodeID(e.target.value)}
+            value={nodeID}
+            onChange={e => setNodeID(e.target.value)}
             required
           />
         </div>
         <div className="input-wrapper">
           <div className="label">Display Name</div>
-          <input type="text" onKeyUp={e => setDisplayName(e.target.value)} />
+          <input
+            type="text"
+            value={displayName}
+            onChange={e => setDisplayName(e.target.value)}
+          />
         </div>
         <div>
           <div className="label">Endpoints</div>
@@ -337,7 +370,14 @@ export function NewNodeForm({ closeFn }) {
         </div>
       </form>
       <div className="form-btn-wrapper">
-        <button type="button" className="form-btn cancel" onClick={closeFn}>
+        <button
+          type="button"
+          className="form-btn cancel"
+          onClick={() => {
+            clearState();
+            closeFn();
+          }}
+        >
           Cancel
         </button>
         <button type="button" className="form-btn submit" onClick={submitNode}>
