@@ -311,46 +311,39 @@ export function NewNodeForm({ closeFn }) {
     <div className="new-node-form-wrapper">
       <div className="title">New Node</div>
       <form className="new-node-form">
-        <div className="input-group">
-          <div className="input-wrapper">
-            <div className="label">Node ID</div>
-            <input
-              type="text"
-              onKeyUp={e => setNodeID(e.target.value)}
-              required
-            />
-          </div>
-          <div className="input-wrapper">
-            <div className="label">Display Name</div>
-            <input type="text" onKeyUp={e => setDisplayName(e.target.value)} />
-          </div>
+        <div className="input-wrapper">
+          <div className="label">Node ID</div>
+          <input
+            type="text"
+            onKeyUp={e => setNodeID(e.target.value)}
+            required
+          />
         </div>
-        <div className="endpoints-wrapper"> </div>
-        <div className="input-group">
-          <div>
-            <div className="label">Endpoints</div>
-            {endpointField()}
-          </div>
-          <div>
-            <div className="label">Allowed public keys</div>
-            {keysField()}
-          </div>
+        <div className="input-wrapper">
+          <div className="label">Display Name</div>
+          <input type="text" onKeyUp={e => setDisplayName(e.target.value)} />
         </div>
-        <div className="label">Metadata</div>
-        {metadataField()}
-        <div className="form-btn-wrapper">
-          <button type="button" className="form-btn cancel" onClick={closeFn}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="form-btn submit"
-            onClick={submitNode}
-          >
-            Submit
-          </button>
+        <div>
+          <div className="label">Endpoints</div>
+          {endpointField()}
+        </div>
+        <div>
+          <div className="label">Allowed public keys</div>
+          {keysField()}
+        </div>
+        <div className="span-col-2">
+          <div className="label">Metadata</div>
+          {metadataField()}
         </div>
       </form>
+      <div className="form-btn-wrapper">
+        <button type="button" className="form-btn cancel" onClick={closeFn}>
+          Cancel
+        </button>
+        <button type="button" className="form-btn submit" onClick={submitNode}>
+          Submit
+        </button>
+      </div>
     </div>
   );
 }

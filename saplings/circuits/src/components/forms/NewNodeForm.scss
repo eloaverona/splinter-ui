@@ -22,21 +22,26 @@
     margin-bottom: 0.5rem;
   }
 
-  .new-node-form {
+  .form-btn-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin: 1rem;
+    float: right;
 
-    .form-btn-wrapper {
-      display: flex;
-      flex-direction: row;
-      margin: 1rem;
-      align-self: flex-end;
+    .form-btn {
+      margin-right: 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+  }
 
-      .form-btn {
-        margin-right: 0.5rem;
-        font-size: 0.8rem;
-        cursor: pointer;
-      }
+  .new-node-form {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+
+    .span-col-2 {
+      grid-column-start: 1;
+      grid-column-end: 3;
     }
 
 
