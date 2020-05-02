@@ -221,7 +221,15 @@ export function ProposeCircuitForm() {
           </div>
         </div>
         <OverlayModal open={modalActive} closeFn={() => setModalActive(false)}>
-          <NewNodeForm closeFn={() => setModalActive(false)} />
+          <NewNodeForm
+            closeFn={() => setModalActive(false)}
+            successCallback={node => {
+              setNodesState({
+                type: 'select',
+                node
+              });
+            }}
+          />
         </OverlayModal>
       </Step>
       <Step step={2} label="Test input 2">

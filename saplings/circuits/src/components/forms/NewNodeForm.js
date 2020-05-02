@@ -17,6 +17,8 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { postNodeRegistry } from '../../api/splinter';
+import { Node } from '../../data/nodeRegistry';
+
 import './NewNodeForm.scss';
 
 const PlusButton = ({ actionFn, display }) => {
@@ -149,7 +151,7 @@ const metadataReducer = (state, action) => {
   }
 };
 
-export function NewNodeForm({ closeFn }) {
+export function NewNodeForm({ closeFn, successCallback }) {
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
     endpoints: ['']
   });
@@ -331,8 +333,8 @@ export function NewNodeForm({ closeFn }) {
     try {
       await postNodeRegistry(node);
       clearState();
-      console.log("clearState");
       closeFn();
+      successCallback(new Node(node));
     } catch (e) {
       throw Error(`Error posting node: ${e}`);
     }
