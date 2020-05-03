@@ -69,9 +69,9 @@ const nodesReducer = (state, action) => {
         filteredBy: state.filteredNodes.filteredBy
       };
 
-      let error = '';
-      if (state.selectedNodes.length < 2) {
-        error = errorMessage;
+      let { error } = state;
+      if (state.selectedNodes.length >= 2) {
+        error = '';
       }
 
       return { ...state, availableNodes, filteredNodes, error };
