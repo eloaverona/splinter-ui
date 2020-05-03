@@ -125,9 +125,7 @@ const keysReducer = (state, action) => {
       const newState = state;
       newState.keys[index] = input;
 
-      if (
-        newState.keys.filter(endpoint => endpoint.length !== 0).length === 0
-      ) {
+      if (newState.keys.filter(key => key.length !== 0).length === 0) {
         newState.isEmpty = true;
         const error = 'At least one key must be provided';
         newState.errors[0] = error;
@@ -170,12 +168,27 @@ const metadataReducer = (state, action) => {
       const newState = state;
       const { key, index } = action;
       newState.metadata[index].key = key;
+      if (key.length !== 0) {
+        delete newState.errors[index];
+      }
+
+      if (key.length === 0 && newState.metadata[index].value.length !== 0) {
+        const error = 'Key cannot be empty';
+        newState.errors[index] = error;
+      }
+
       return { ...newState };
     }
     case 'set-field-value': {
       const newState = state;
       const { value, index } = action;
       newState.metadata[index].value = value;
+      if (newState.metadata[index].key.length === 0 && value.length !== 0) {
+        const error = 'Key cannot be empty';
+        newState.errors[index] = error;
+      } else {
+        delete newState.errors[index];
+      }
       return { ...newState };
     }
     case 'clear': {
@@ -185,7 +198,8 @@ const metadataReducer = (state, action) => {
             key: '',
             value: ''
           }
-        ]
+        ],
+        errors: {}
       };
     }
     default:
@@ -213,7 +227,8 @@ export function NewNodeForm({ closeFn, successCallback }) {
         key: '',
         value: ''
       }
-    ]
+    ],
+    errors: {},
   });
 
   const [displayName, setDisplayName] = useState('');
@@ -226,12 +241,14 @@ export function NewNodeForm({ closeFn, successCallback }) {
     const keysIsValid =
       Object.keys(keysState.errors).length === 0 && !keysState.isEmpty;
 
-    if (endpointsIsValid && keysIsValid) {
+    const metadataIsValid = Object.keys(metadataState.errors).length === 0;
+
+    if (endpointsIsValid && keysIsValid && metadataIsValid) {
       setFormComplete(true);
     } else {
       setFormComplete(false);
     }
-  }, [endpointState, keysState]);
+  }, [endpointState, keysState, metadataState]);
 
   const endpointField = () => {
     return endpointState.endpoints.map((endpoint, i) => {
@@ -368,6 +385,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i > 0}
           />
+          <div className="form-error">{metadataState.errors[i]}</div>
         </div>
       );
     });
