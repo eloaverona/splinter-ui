@@ -65,20 +65,24 @@ const endpointsReducer = (state, action) => {
     }
     case 'remove-field': {
       const { index } = action;
-      state.endpoints.splice(index, 1);
-      return { ...state };
+      const newState = state;
+      newState.endpoints.splice(index, 1);
+      delete newState.errors[index];
+      return { ...newState };
     }
     case 'set-field-value': {
       const { input, index } = action;
       const newState = state;
       newState.endpoints[index] = input;
-      const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
-      console.log("regex.test(input)");
-      console.log(regex.test(input));
-      if (input.length === 0 && index === 0) {
+      const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
+
+      if (
+        newState.endpoints.filter(endpoint => endpoint.length !== 0).length ===
+        0
+      ) {
         const error = 'At least one endpoint must be set';
         newState.errors[index] = error;
-      } else if (!regex.test(input)) {
+      } else if (input.length !== 0 && !regex.test(input)) {
         const error = 'Invalid endpoint';
         newState.errors[index] = error;
       } else {
@@ -88,7 +92,8 @@ const endpointsReducer = (state, action) => {
     }
     case 'clear': {
       return {
-        endpoints: ['']
+        endpoints: [''],
+        errors: {}
       };
     }
     default:
@@ -115,7 +120,8 @@ const keysReducer = (state, action) => {
     }
     case 'clear': {
       return {
-        keys: ['']
+        keys: [''],
+        errors: {}
       };
     }
     default:
