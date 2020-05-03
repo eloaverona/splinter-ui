@@ -80,7 +80,7 @@ const endpointsReducer = (state, action) => {
         newState.endpoints.filter(endpoint => endpoint.length !== 0).length ===
         0
       ) {
-        const error = 'At least one endpoint must be set';
+        const error = 'At least one endpoint must be provided';
         newState.errors[index] = error;
       } else if (input.length !== 0 && !regex.test(input)) {
         const error = 'Invalid endpoint';
@@ -109,13 +109,24 @@ const keysReducer = (state, action) => {
     }
     case 'remove-field': {
       const { index } = action;
-      state.keys.splice(index, 1);
-      return { ...state };
+      const newState = state;
+      newState.keys.splice(index, 1);
+      delete newState.errors[index];
+      return { ...newState };
     }
     case 'set-field-value': {
       const { input, index } = action;
       const newState = state;
       newState.keys[index] = input;
+
+      if (
+        newState.keys.filter(endpoint => endpoint.length !== 0).length === 0
+      ) {
+        const error = 'At least one key must be provided';
+        newState.errors[index] = error;
+      } else {
+        delete newState.errors[index];
+      }
       return { ...newState };
     }
     case 'clear': {
@@ -179,7 +190,8 @@ export function NewNodeForm({ closeFn, successCallback }) {
     errors: {}
   });
   const [keysState, setKeys] = useReducer(keysReducer, {
-    keys: ['']
+    keys: [''],
+    errors: {}
   });
   const [metadataState, setMetadata] = useReducer(metadataReducer, {
     metadata: [
@@ -197,7 +209,12 @@ export function NewNodeForm({ closeFn, successCallback }) {
     const endpointsIsValid =
       Object.keys(endpointState.errors).length === 0 &&
       endpointState.endpoints[0].length !== 0;
-    if (endpointsIsValid) {
+
+    const keysIsValid =
+      Object.keys(keysState.errors).length === 0 &&
+      keysState.keys[0].length !== 0;
+
+    if (endpointsIsValid && keysIsValid) {
       setFormComplete(true);
     } else {
       setFormComplete(false);
@@ -240,7 +257,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i > 0}
           />
-          <div>{endpointState.errors[i] ? endpointState.errors[i] : ''}</div>
+          <div className="form-error">{endpointState.errors[i]}</div>
         </div>
       );
     });
@@ -282,6 +299,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i > 0}
           />
+          <div className="form-error">{keysState.errors[i]}</div>
         </div>
       );
     });

@@ -44,6 +44,11 @@
       grid-column-end: 3;
     }
 
+    .form-error {
+      font-size: 0.8rem;
+      color: var(--color-attention);
+    }
+
     .label {
       font-size: 0.8rem;
       color: var(--color-grey);
