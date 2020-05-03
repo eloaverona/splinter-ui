@@ -72,6 +72,18 @@ const endpointsReducer = (state, action) => {
       const { input, index } = action;
       const newState = state;
       newState.endpoints[index] = input;
+      const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+      console.log("regex.test(input)");
+      console.log(regex.test(input));
+      if (input.length === 0 && index === 0) {
+        const error = 'At least one endpoint must be set';
+        newState.errors[index] = error;
+      } else if (!regex.test(input)) {
+        const error = 'Invalid endpoint';
+        newState.errors[index] = error;
+      } else {
+        delete newState.errors[index];
+      }
       return { ...newState };
     }
     case 'clear': {
@@ -154,8 +166,11 @@ const metadataReducer = (state, action) => {
 
 export function NewNodeForm({ closeFn, successCallback }) {
   const { addToast } = useToasts();
+  const [formComplete, setFormComplete] = useState(false);
+
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
-    endpoints: ['']
+    endpoints: [''],
+    errors: {}
   });
   const [keysState, setKeys] = useReducer(keysReducer, {
     keys: ['']
@@ -171,6 +186,17 @@ export function NewNodeForm({ closeFn, successCallback }) {
 
   const [displayName, setDisplayName] = useState('');
   const [nodeID, setNodeID] = useState('');
+
+  useEffect(() => {
+    const endpointsIsValid =
+      Object.keys(endpointState.errors).length === 0 &&
+      endpointState.endpoints[0].length !== 0;
+    if (endpointsIsValid) {
+      setFormComplete(true);
+    } else {
+      setFormComplete(false);
+    }
+  }, [endpointState]);
 
   const endpointField = () => {
     return endpointState.endpoints.map((endpoint, i) => {
@@ -208,6 +234,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i > 0}
           />
+          <div>{endpointState.errors[i] ? endpointState.errors[i] : ''}</div>
         </div>
       );
     });
@@ -337,7 +364,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
       clearState();
       closeFn();
       successCallback(new Node(node));
-      addToast('Node submited successfully', { appearance: 'success' });
+      addToast('Node submitted successfully', { appearance: 'success' });
     } catch (e) {
       addToast(`${e}`, { appearance: 'error' });
     }
@@ -388,7 +415,12 @@ export function NewNodeForm({ closeFn, successCallback }) {
         >
           Cancel
         </button>
-        <button type="button" className="form-btn submit" onClick={submitNode}>
+        <button
+          type="button"
+          disabled={!formComplete}
+          className="form-btn submit"
+          onClick={submitNode}
+        >
           Submit
         </button>
       </div>
