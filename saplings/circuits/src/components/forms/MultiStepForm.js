@@ -133,7 +133,12 @@ export function MultiStepForm({
             </button>
           )}
           {step < children.length && (
-            <button type="button" className="confirm" onClick={next}>
+            <button
+              type="button"
+              className="confirm"
+              disabled={disabled}
+              onClick={next}
+            >
               Next
             </button>
           )}

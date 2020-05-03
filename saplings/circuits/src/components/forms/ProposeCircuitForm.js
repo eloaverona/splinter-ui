@@ -45,6 +45,9 @@ const filterNodes = (nodes, input) => {
 };
 
 const nodesReducer = (state, action) => {
+  const errorMessage =
+    'At least two nodes must be part of a circuit. Please select a node.';
+
   switch (action.type) {
     case 'filter': {
       const nodes = filterNodes(state.availableNodes, action.input);
@@ -66,7 +69,12 @@ const nodesReducer = (state, action) => {
         filteredBy: state.filteredNodes.filteredBy
       };
 
-      return { ...state, availableNodes, filteredNodes };
+      let error = '';
+      if (state.selectedNodes.length < 2) {
+        error = errorMessage;
+      }
+
+      return { ...state, availableNodes, filteredNodes, error };
     }
     case 'removeSelect': {
       const { node } = action;
@@ -82,7 +90,12 @@ const nodesReducer = (state, action) => {
         nodes,
         filteredBy: state.filteredNodes.filteredBy
       };
-      return { ...state, selectedNodes, filteredNodes };
+
+      let error = '';
+      if (selectedNodes.length < 2) {
+        error = errorMessage;
+      }
+      return { ...state, selectedNodes, filteredNodes, error };
     }
     case 'set': {
       const { nodes } = action;
@@ -113,8 +126,13 @@ export function ProposeCircuitForm() {
     filteredNodes: {
       nodes: [],
       filteredBy: ''
-    }
+    },
+    error: ''
   });
+
+  const nodesAreValid = () => {
+    return nodesState.selectedNodes.length >= 2;
+  };
 
   const plusSign = (
     <span className="add-sign">
@@ -145,14 +163,14 @@ export function ProposeCircuitForm() {
     <MultiStepForm
       formName="Propose Circuit"
       handleSubmit={() => {}}
-      disabled="false"
+      disabled={!nodesAreValid()}
     >
       <Step step={1} label="Add Nodes">
         <div className="node-registry-wrapper">
           <div className="selected-nodes-header">
             <div className="title">Selected nodes</div>
           </div>
-
+          <div className="form-error">{nodesState.error}</div>
           <div className="selected-nodes">
             <Chips>
               {nodesState.selectedNodes.map(node => {
@@ -232,10 +250,10 @@ export function ProposeCircuitForm() {
           />
         </OverlayModal>
       </Step>
-      <Step step={2} label="Test input 2">
+      <Step step={2} label="Test step 2">
         <StepInput type="file" accept="text/csv" id="add-master-data-file" />
       </Step>
-      <Step step={3} label="Test input 3">
+      <Step step={3} label="Test step 3">
         <StepInput type="file" accept="text/csv" id="add-master-data-file" />
       </Step>
     </MultiStepForm>
