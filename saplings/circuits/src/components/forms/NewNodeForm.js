@@ -74,18 +74,23 @@ const endpointsReducer = (state, action) => {
       const { input, index } = action;
       const newState = state;
       newState.endpoints[index] = input;
-      const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
+      const regex = /^(([^:/?#]+):\/\/)/; // url starts with protocol
 
       if (
         newState.endpoints.filter(endpoint => endpoint.length !== 0).length ===
         0
       ) {
+        newState.isEmpty = true;
         const error = 'At least one endpoint must be provided';
-        newState.errors[index] = error;
+        newState.errors[0] = error;
       } else if (input.length !== 0 && !regex.test(input)) {
         const error = 'Invalid endpoint';
         newState.errors[index] = error;
       } else {
+        if (newState.isEmpty) {
+          delete newState.errors[0];
+        }
+        newState.isEmpty = false;
         delete newState.errors[index];
       }
       return { ...newState };
@@ -93,7 +98,8 @@ const endpointsReducer = (state, action) => {
     case 'clear': {
       return {
         endpoints: [''],
-        errors: {}
+        errors: {},
+        isEmpty: true
       };
     }
     default:
@@ -122,9 +128,14 @@ const keysReducer = (state, action) => {
       if (
         newState.keys.filter(endpoint => endpoint.length !== 0).length === 0
       ) {
+        newState.isEmpty = true;
         const error = 'At least one key must be provided';
-        newState.errors[index] = error;
+        newState.errors[0] = error;
       } else {
+        if (newState.isEmpty) {
+          delete newState.errors[0];
+        }
+        newState.isEmpty = false;
         delete newState.errors[index];
       }
       return { ...newState };
@@ -132,7 +143,8 @@ const keysReducer = (state, action) => {
     case 'clear': {
       return {
         keys: [''],
-        errors: {}
+        errors: {},
+        isEmpty: true
       };
     }
     default:
@@ -187,11 +199,13 @@ export function NewNodeForm({ closeFn, successCallback }) {
 
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
     endpoints: [''],
-    errors: {}
+    errors: {},
+    isEmpty: true
   });
   const [keysState, setKeys] = useReducer(keysReducer, {
     keys: [''],
-    errors: {}
+    errors: {},
+    isEmpty: true
   });
   const [metadataState, setMetadata] = useReducer(metadataReducer, {
     metadata: [
@@ -207,19 +221,17 @@ export function NewNodeForm({ closeFn, successCallback }) {
 
   useEffect(() => {
     const endpointsIsValid =
-      Object.keys(endpointState.errors).length === 0 &&
-      endpointState.endpoints[0].length !== 0;
+      Object.keys(endpointState.errors).length === 0 && !endpointState.isEmpty;
 
     const keysIsValid =
-      Object.keys(keysState.errors).length === 0 &&
-      keysState.keys[0].length !== 0;
+      Object.keys(keysState.errors).length === 0 && !keysState.isEmpty;
 
     if (endpointsIsValid && keysIsValid) {
       setFormComplete(true);
     } else {
       setFormComplete(false);
     }
-  }, [endpointState]);
+  }, [endpointState, keysState]);
 
   const endpointField = () => {
     return endpointState.endpoints.map((endpoint, i) => {
