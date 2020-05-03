@@ -51,8 +51,7 @@ export const postNodeRegistry = async node => {
   );
 
   if (result.ok) {
-    // const response = new NodeRegistryResponse(result.json);
     return node;
   }
-  throw Error(result.data);
+  throw Error(result.json.message);
 };

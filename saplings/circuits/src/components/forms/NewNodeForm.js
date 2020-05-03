@@ -16,6 +16,7 @@
 
 import React, { useState, useEffect, useReducer } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useToasts } from 'react-toast-notifications';
 import { postNodeRegistry } from '../../api/splinter';
 import { Node } from '../../data/nodeRegistry';
 
@@ -152,6 +153,7 @@ const metadataReducer = (state, action) => {
 };
 
 export function NewNodeForm({ closeFn, successCallback }) {
+  const { addToast } = useToasts();
   const [endpointState, setEndpoints] = useReducer(endpointsReducer, {
     endpoints: ['']
   });
@@ -335,8 +337,9 @@ export function NewNodeForm({ closeFn, successCallback }) {
       clearState();
       closeFn();
       successCallback(new Node(node));
+      addToast('Node submited successfully', { appearance: 'success' });
     } catch (e) {
-      throw Error(`Error posting node: ${e}`);
+      addToast(`${e}`, { appearance: 'error' });
     }
   };
 
