@@ -228,11 +228,17 @@ export function NewNodeForm({ closeFn, successCallback }) {
         value: ''
       }
     ],
-    errors: {},
+    errors: {}
   });
 
-  const [displayName, setDisplayName] = useState('');
-  const [nodeID, setNodeID] = useState('');
+  const [displayNameState, setDisplayName] = useState({
+    displayName: '',
+    error: ''
+  });
+  const [nodeIDState, setNodeID] = useState({
+    nodeID: '',
+    error: ''
+  });
 
   useEffect(() => {
     const endpointsIsValid =
@@ -243,12 +249,22 @@ export function NewNodeForm({ closeFn, successCallback }) {
 
     const metadataIsValid = Object.keys(metadataState.errors).length === 0;
 
-    if (endpointsIsValid && keysIsValid && metadataIsValid) {
+    const nodeIDIsValid = nodeIDState.error.length === 0;
+
+    const displayNameIsValid = displayNameState.error.length === 0;
+
+    if (
+      endpointsIsValid &&
+      keysIsValid &&
+      metadataIsValid &&
+      nodeIDIsValid &&
+      displayNameIsValid
+    ) {
       setFormComplete(true);
     } else {
       setFormComplete(false);
     }
-  }, [endpointState, keysState, metadataState]);
+  }, [endpointState, keysState, metadataState, displayNameState, nodeIDState]);
 
   const endpointField = () => {
     return endpointState.endpoints.map((endpoint, i) => {
@@ -392,8 +408,14 @@ export function NewNodeForm({ closeFn, successCallback }) {
   };
 
   const clearState = () => {
-    setDisplayName('');
-    setNodeID('');
+    setDisplayName({
+      displayName: '',
+      error: ''
+    });
+    setNodeID({
+      nodeID: '',
+      error: ''
+    });
     setMetadata({ type: 'clear' });
     setEndpoints({ type: 'clear' });
     setKeys({ type: 'clear' });
@@ -407,9 +429,9 @@ export function NewNodeForm({ closeFn, successCallback }) {
       }
     });
     const node = {
-      identity: nodeID,
+      identity: nodeIDState.nodeID,
       endpoints: endpointState.endpoints.filter(endpoint => endpoint !== ''),
-      display_name: displayName,
+      display_name: displayNameState.displayName,
       keys: keysState.keys.filter(key => key !== ''),
       metadata
     };
@@ -432,18 +454,43 @@ export function NewNodeForm({ closeFn, successCallback }) {
           <div className="label">Node ID</div>
           <input
             type="text"
-            value={nodeID}
-            onChange={e => setNodeID(e.target.value)}
-            required
+            value={nodeIDState.nodeID}
+            onChange={e => {
+              setNodeID(() => {
+                const input = e.target.value;
+                let error = '';
+                if (input.length === 0) {
+                  error = 'Node ID cannot be empty';
+                }
+                return {
+                  nodeID: input,
+                  error
+                };
+              });
+            }}
           />
+          <div className="form-error">{nodeIDState.error}</div>
         </div>
         <div className="input-wrapper">
           <div className="label">Display Name</div>
           <input
             type="text"
-            value={displayName}
-            onChange={e => setDisplayName(e.target.value)}
+            value={displayNameState.displayName}
+            onChange={e => {
+              setDisplayName(() => {
+                const input = e.target.value;
+                let error = '';
+                if (input.length === 0) {
+                  error = 'Display name cannot be empty';
+                }
+                return {
+                  displayName: input,
+                  error
+                };
+              });
+            }}
           />
+          <div className="form-error">{displayNameState.error}</div>
         </div>
         <div>
           <div className="label">Endpoints</div>
