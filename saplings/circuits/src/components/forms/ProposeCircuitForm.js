@@ -16,10 +16,12 @@
 
 import React, { useState, useEffect, useReducer } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+
 import { MultiStepForm, Step } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
-
+import { Node } from '../../data/nodeRegistry';
 import nodeIcon from '../../images/node_icon.svg';
 import { OverlayModal } from '../OverlayModal';
 import { NewNodeForm } from './NewNodeForm';
@@ -110,6 +112,32 @@ const nodesReducer = (state, action) => {
     default:
       throw new Error(`unhandled action type: ${action.type}`);
   }
+};
+
+const NodeItem = ({ nodes, onClickFn }) => {
+  return (
+    <ul className="nodes-list">
+      {nodes.map(node => (
+        <li className="node-item">
+          <button
+            type="button"
+            onClick={() => {
+              onClickFn(node);
+            }}
+          >
+            <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
+            <span className="node-name">{node.displayName}</span>
+            <span className="node-id">{node.identity}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+NodeItem.propTypes = {
+  nodes: PropTypes.arrayOf(Node).isRequired,
+  onClickFn: PropTypes.func.isRequired
 };
 
 export function ProposeCircuitForm() {
@@ -210,29 +238,15 @@ export function ProposeCircuitForm() {
                   New node
                 </button>
               </div>
-              <ul>
-                {nodesState.filteredNodes.nodes.map(node => (
-                  <li className="node-item">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        nodesDispatcher({
-                          type: 'select',
-                          node
-                        });
-                      }}
-                    >
-                      <img
-                        src={nodeIcon}
-                        className="node-icon"
-                        alt="Icon for a node"
-                      />
-                      <span className="node-name">{node.displayName}</span>
-                      <span className="node-id">{node.identity}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <NodeItem
+                nodes={nodesState.filteredNodes.nodes}
+                onClickFn={node => {
+                  nodesDispatcher({
+                    type: 'select',
+                    node
+                  });
+                }}
+              />
             </div>
           </div>
           <OverlayModal open={modalActive}>
@@ -261,14 +275,10 @@ export function ProposeCircuitForm() {
             </div>
             <div className="input-wrapper span-col-2">
               <div className="label">Allowed nodes</div>
-              <select id="cars" multiple>
-                {nodesState.selectedNodes.map(node => {
-                  return <option value={node}>{node.identity}</option>;
-                })}
-              </select>
+              <NodeItem nodes={nodesState.selectedNodes} onClickFn={() => {}} />
               <div className="form-error">{}</div>
             </div>
-        </div>
+          </div>
         </Step>
         <Step step={3} label="Configure circuit">
           <input type="text" placeholder="test" />
