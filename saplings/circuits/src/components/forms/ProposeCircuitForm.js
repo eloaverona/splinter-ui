@@ -114,6 +114,30 @@ const nodesReducer = (state, action) => {
   }
 };
 
+const allowedNodesReducer = (state, action) => {
+  const errorMessage =
+    'At least two nodes must be part of a circuit. Please select a node.';
+
+  switch (action.type) {
+    case 'toggle-show': {
+      return { ...state, show: !state.show }
+    }
+    case 'toggle-select': {
+      const { node } = action;
+      const newState = state;
+      if (state.selectedNodes[node.identity]) {
+        delete newState.selectedNodes[node.identity];
+      } else {
+        newState.selectedNodes[node.identity] = node;
+      }
+      return { ...newState };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
+
 const NodeItem = ({ nodes, onClickFn }) => {
   return (
     <ul className="nodes-list">
@@ -153,6 +177,11 @@ export function ProposeCircuitForm() {
       filteredBy: ''
     },
     error: ''
+  });
+
+  const [allowedNodes, allowedNodesDispatch] = useReducer(allowedNodesReducer, {
+    show: false,
+    selectedNodes: {}
   });
 
   const nodesAreValid = () => {
@@ -275,7 +304,27 @@ export function ProposeCircuitForm() {
             </div>
             <div className="input-wrapper span-col-2">
               <div className="label">Allowed nodes</div>
-              <NodeItem nodes={nodesState.selectedNodes} onClickFn={() => {}} />
+              <div
+                className="allowed-nodes-dropdown"
+                onClick={() => allowedNodesDispatch({ type: 'toggle-show' })}
+              >
+              d
+                {Object.keys(allowedNodes.selectedNodes).join(', ')}
+              </div>
+              <div
+                className={
+                  allowedNodes.show
+                    ? 'allowed-nodes-list'
+                    : 'allowed-nodes-list hide'
+                }
+              >
+                <NodeItem
+                  nodes={nodesState.selectedNodes}
+                  onClickFn={node => {
+                    allowedNodesDispatch({ type: 'toggle-select', node });
+                  }}
+                />
+              </div>
               <div className="form-error">{}</div>
             </div>
           </div>
