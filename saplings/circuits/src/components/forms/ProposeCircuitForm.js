@@ -156,108 +156,130 @@ export function ProposeCircuitForm() {
   }, [localNode]);
 
   return (
-    <MultiStepForm
-      formName="Propose Circuit"
-      handleSubmit={() => {}}
-      disabled={!nodesAreValid()}
-    >
-      <Step step={1} label="Add Nodes">
-        <div className="node-registry-wrapper">
-          <div className="selected-nodes-header">
-            <div className="title">Selected nodes</div>
-          </div>
-          <div className="form-error">{nodesState.error}</div>
-          <div className="selected-nodes">
-            <Chips>
-              {nodesState.selectedNodes.map(node => {
-                const local = node.identity === localNodeID;
-                return (
-                  <Chip
-                    node={node}
-                    isLocal={local}
-                    deleteable={!local}
-                    removeFn={() => {
-                      nodesDispatcher({ type: 'removeSelect', node });
-                    }}
-                  />
-                );
-              })}
-            </Chips>
-          </div>
-          <div className="available-nodes">
-            <div className="available-nodes-header">
-              <div className="title-wrapper">
-                <div className="title">Available nodes</div>
-                <input
-                  type="text"
-                  placeholder="Filter"
-                  className="search-nodes-input"
-                  onKeyUp={event => {
-                    nodesDispatcher({
-                      type: 'filter',
-                      input: event.target.value.toLowerCase()
-                    });
-                  }}
-                />
-              </div>
-              <button
-                type="button"
-                className="new-node-button"
-                onClick={() => setModalActive(true)}
-              >
-                {plusSign}
-                New node
-              </button>
+    <div className="circuit-proposal-form">
+      <MultiStepForm
+        formName="Propose Circuit"
+        handleSubmit={() => {}}
+        disabled={!nodesAreValid()}
+      >
+        <Step step={1} label="Add Nodes">
+          <div className="node-registry-wrapper">
+            <div className="selected-nodes-header">
+              <div className="title">Selected nodes</div>
             </div>
-            <ul>
-              {nodesState.filteredNodes.nodes.map(node => (
-                <li className="node-item">
-                  <button
-                    type="button"
-                    onClick={() => {
+            <div className="form-error">{nodesState.error}</div>
+            <div className="selected-nodes">
+              <Chips>
+                {nodesState.selectedNodes.map(node => {
+                  const local = node.identity === localNodeID;
+                  return (
+                    <Chip
+                      node={node}
+                      isLocal={local}
+                      deleteable={!local}
+                      removeFn={() => {
+                        nodesDispatcher({ type: 'removeSelect', node });
+                      }}
+                    />
+                  );
+                })}
+              </Chips>
+            </div>
+            <div className="available-nodes">
+              <div className="available-nodes-header">
+                <div className="title-wrapper">
+                  <div className="title">Available nodes</div>
+                  <input
+                    type="text"
+                    placeholder="Filter"
+                    className="search-nodes-input"
+                    onKeyUp={event => {
                       nodesDispatcher({
-                        type: 'select',
-                        node
+                        type: 'filter',
+                        input: event.target.value.toLowerCase()
                       });
                     }}
-                  >
-                    <img
-                      src={nodeIcon}
-                      className="node-icon"
-                      alt="Icon for a node"
-                    />
-                    <span className="node-name">{node.displayName}</span>
-                    <span className="node-id">{node.identity}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="new-node-button"
+                  onClick={() => setModalActive(true)}
+                >
+                  {plusSign}
+                  New node
+                </button>
+              </div>
+              <ul>
+                {nodesState.filteredNodes.nodes.map(node => (
+                  <li className="node-item">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        nodesDispatcher({
+                          type: 'select',
+                          node
+                        });
+                      }}
+                    >
+                      <img
+                        src={nodeIcon}
+                        className="node-icon"
+                        alt="Icon for a node"
+                      />
+                      <span className="node-name">{node.displayName}</span>
+                      <span className="node-id">{node.identity}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
+          <OverlayModal open={modalActive}>
+            <NewNodeForm
+              closeFn={() => setModalActive(false)}
+              successCallback={node => {
+                nodesDispatcher({
+                  type: 'select',
+                  node
+                });
+              }}
+            />
+          </OverlayModal>
+        </Step>
+        <Step step={2} label="Add services">
+          <div className="services-wrapper">
+            <div className="input-wrapper">
+              <div className="label">Service ID</div>
+              <input type="text" value="" onChange={e => {}} />
+              <div className="form-error">{}</div>
+            </div>
+            <div className="input-wrapper">
+              <div className="label">Service type</div>
+              <input type="text" value="" onChange={e => {}} />
+              <div className="form-error">{}</div>
+            </div>
+            <div className="input-wrapper span-col-2">
+              <div className="label">Allowed nodes</div>
+              <select id="cars" multiple>
+                {nodesState.selectedNodes.map(node => {
+                  return <option value={node}>{node.identity}</option>;
+                })}
+              </select>
+              <div className="form-error">{}</div>
+            </div>
         </div>
-        <OverlayModal open={modalActive}>
-          <NewNodeForm
-            closeFn={() => setModalActive(false)}
-            successCallback={node => {
-              nodesDispatcher({
-                type: 'select',
-                node
-              });
-            }}
-          />
-        </OverlayModal>
-      </Step>
-      <Step step={2} label="Add services">
-        <input type="text" placeholder="test" />
-      </Step>
-      <Step step={3} label="Configure circuit">
-        <input type="text" placeholder="test" />
-      </Step>
-      <Step step={4} label="Add metadata">
-        <input type="text" placeholder="test" />
-      </Step>
-      <Step step={5} label="Review and submit">
-        <input type="text" placeholder="test" />
-      </Step>
-    </MultiStepForm>
+        </Step>
+        <Step step={3} label="Configure circuit">
+          <input type="text" placeholder="test" />
+        </Step>
+        <Step step={4} label="Add metadata">
+          <input type="text" placeholder="test" />
+        </Step>
+        <Step step={5} label="Review and submit">
+          <input type="text" placeholder="test" />
+        </Step>
+      </MultiStepForm>
+    </div>
   );
 }
