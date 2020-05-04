@@ -14,18 +14,219 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MultiStepForm, Step } from './MultiStepForm';
+import { useNodeRegistryState } from '../../state/nodeRegistry';
+import { useLocalNodeState } from '../../state/localNode';
+
+import nodeIcon from '../../images/node_icon.svg';
+
+import { Chip, Chips } from '../Chips';
+
+import './ProposeCircuitForm.scss';
+
+const filterNodes = (nodes, input) => {
+  const filteredNodes = nodes.filter(node => {
+    if (node.identity.toLowerCase().indexOf(input) > -1) {
+      return true;
+    }
+    if (node.displayName.toLowerCase().indexOf(input) > -1) {
+      return true;
+    }
+    return false;
+  });
+
+  return filteredNodes;
+};
+
+const nodesReducer = (state, action) => {
+  const errorMessage =
+    'At least two nodes must be part of a circuit. Please select a node.';
+
+  switch (action.type) {
+    case 'filter': {
+      const nodes = filterNodes(state.availableNodes, action.input);
+      const filteredNodes = {
+        nodes,
+        filteredBy: action.input
+      };
+      return { ...state, filteredNodes };
+    }
+    case 'select': {
+      const { node } = action;
+      state.selectedNodes.push(node);
+      const availableNodes = state.availableNodes.filter(
+        item => item.identity !== node.identity
+      );
+      const nodes = filterNodes(availableNodes, state.filteredNodes.filteredBy);
+      const filteredNodes = {
+        nodes,
+        filteredBy: state.filteredNodes.filteredBy
+      };
+
+      let { error } = state;
+      if (state.selectedNodes.length >= 2) {
+        error = '';
+      }
+
+      return { ...state, availableNodes, filteredNodes, error };
+    }
+    case 'removeSelect': {
+      const { node } = action;
+      const selectedNodes = state.selectedNodes.filter(
+        item => item.identity !== node.identity
+      );
+      state.availableNodes.push(node);
+      const nodes = filterNodes(
+        state.availableNodes,
+        state.filteredNodes.filteredBy
+      );
+      const filteredNodes = {
+        nodes,
+        filteredBy: state.filteredNodes.filteredBy
+      };
+
+      let error = '';
+      if (selectedNodes.length < 2) {
+        error = errorMessage;
+      }
+      return { ...state, selectedNodes, filteredNodes, error };
+    }
+    case 'set': {
+      const { nodes } = action;
+      return {
+        ...state,
+        nodes,
+        availableNodes: nodes,
+        filteredNodes: {
+          nodes,
+          filteredBy: ''
+        }
+      };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
 
 export function ProposeCircuitForm() {
+  const allNodes = useNodeRegistryState();
+  const localNodeID = useLocalNodeState();
+  const [localNode] = allNodes.filter(node => node.identity === localNodeID);
+  const [nodesState, nodesDispatcher] = useReducer(nodesReducer, {
+    selectedNodes: [],
+    availableNodes: [],
+    filteredNodes: {
+      nodes: [],
+      filteredBy: ''
+    },
+    error: ''
+  });
+
+  const nodesAreValid = () => {
+    return nodesState.selectedNodes.length >= 2;
+  };
+
+  const plusSign = (
+    <span className="add-sign">
+      <FontAwesomeIcon icon="plus" />
+    </span>
+  );
+
+  useEffect(() => {
+    if (allNodes) {
+      nodesDispatcher({
+        type: 'set',
+        nodes: allNodes
+      });
+    }
+  }, [allNodes]);
+
+  useEffect(() => {
+    if (localNode) {
+      nodesDispatcher({
+        type: 'select',
+        node: localNode
+      });
+    }
+  }, [localNode]);
+
   return (
     <MultiStepForm
       formName="Propose Circuit"
       handleSubmit={() => {}}
-      disabled={false}
+      disabled={!nodesAreValid()}
     >
       <Step step={1} label="Add Nodes">
-        <input type="text" placeholder="test" />
+        <div className="node-registry-wrapper">
+          <div className="selected-nodes-header">
+            <div className="title">Selected nodes</div>
+          </div>
+          <div className="form-error">{nodesState.error}</div>
+          <div className="selected-nodes">
+            <Chips>
+              {nodesState.selectedNodes.map(node => {
+                const local = node.identity === localNodeID;
+                return (
+                  <Chip
+                    node={node}
+                    isLocal={local}
+                    deleteable={!local}
+                    removeFn={() => {
+                      nodesDispatcher({ type: 'removeSelect', node });
+                    }}
+                  />
+                );
+              })}
+            </Chips>
+          </div>
+          <div className="available-nodes">
+            <div className="available-nodes-header">
+              <div className="title-wrapper">
+                <div className="title">Available nodes</div>
+                <input
+                  type="text"
+                  placeholder="Filter"
+                  className="search-nodes-input"
+                  onKeyUp={event => {
+                    nodesDispatcher({
+                      type: 'filter',
+                      input: event.target.value.toLowerCase()
+                    });
+                  }}
+                />
+              </div>
+              <button type="button" className="new-node-button">
+                {plusSign}
+                New node
+              </button>
+            </div>
+            <ul>
+              {nodesState.filteredNodes.nodes.map(node => (
+                <li className="node-item">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      nodesDispatcher({
+                        type: 'select',
+                        node
+                      });
+                    }}
+                  >
+                    <img
+                      src={nodeIcon}
+                      className="node-icon"
+                      alt="Icon for a node"
+                    />
+                    <span className="node-name">{node.displayName}</span>
+                    <span className="node-id">{node.identity}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </Step>
       <Step step={2} label="Add services">
         <input type="text" placeholder="test" />
