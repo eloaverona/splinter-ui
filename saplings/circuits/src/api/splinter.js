@@ -15,7 +15,7 @@
  */
 
 import { getSharedConfig } from 'splinter-saplingjs';
-import { get } from './requests';
+import { get, post } from './requests';
 import { NodeRegistryResponse } from '../data/nodeRegistry';
 
 const { splinterURL } = getSharedConfig().canopyConfig;
@@ -37,4 +37,21 @@ export const getNodeRegistry = async () => {
     return response.data;
   }
   throw Error(result.data);
+};
+
+export const postNodeRegistry = async node => {
+  const setHeader = request => {
+    request.setRequestHeader('Content-Type', 'application/json');
+  };
+
+  const result = await post(
+    `${splinterURL}/admin/nodes`,
+    JSON.stringify(node),
+    setHeader
+  );
+
+  if (result.ok) {
+    return node;
+  }
+  throw Error(result.json.message);
 };
