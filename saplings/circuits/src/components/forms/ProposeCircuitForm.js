@@ -21,6 +21,8 @@ import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
 
 import nodeIcon from '../../images/node_icon.svg';
+import { OverlayModal } from '../OverlayModal';
+import { NewNodeForm } from './NewNodeForm';
 
 import { Chip, Chips } from '../Chips';
 
@@ -113,6 +115,7 @@ const nodesReducer = (state, action) => {
 export function ProposeCircuitForm() {
   const allNodes = useNodeRegistryState();
   const localNodeID = useLocalNodeState();
+  const [modalActive, setModalActive] = useState(false);
   const [localNode] = allNodes.filter(node => node.identity === localNodeID);
   const [nodesState, nodesDispatcher] = useReducer(nodesReducer, {
     selectedNodes: [],
@@ -197,7 +200,11 @@ export function ProposeCircuitForm() {
                   }}
                 />
               </div>
-              <button type="button" className="new-node-button">
+              <button
+                type="button"
+                className="new-node-button"
+                onClick={() => setModalActive(true)}
+              >
                 {plusSign}
                 New node
               </button>
@@ -227,6 +234,17 @@ export function ProposeCircuitForm() {
             </ul>
           </div>
         </div>
+        <OverlayModal open={modalActive}>
+          <NewNodeForm
+            closeFn={() => setModalActive(false)}
+            successCallback={node => {
+              nodesDispatcher({
+                type: 'select',
+                node
+              });
+            }}
+          />
+        </OverlayModal>
       </Step>
       <Step step={2} label="Add services">
         <input type="text" placeholder="test" />
