@@ -163,9 +163,28 @@
       grid-template-columns: repeat(2,1fr);
       margin: 1rem 0 0.5rem;
 
-      .allowed-nodes-select {
+      .allowed-nodes-dropdown {
         width: 100%;
         margin-top: 1rem;
+        height: 2rem;
+        color: var(--color-grey);
+        border-bottom: 1px solid var(--color-light-grey);
+        font-size: 0.8rem;
+
+        .caret {
+          font-size: 1rem;
+          float: right;
+        }
+      }
+
+      .allowed-nodes-list{
+        position: absolute;
+        z-index: 1;
+        background-color: var(--background-color-white);
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        width: 78%;
+        max-height: 40%;
+        overflow-y: auto;
       }
   }
 }

@@ -194,6 +194,18 @@ export function ProposeCircuitForm() {
     </span>
   );
 
+  const caretDown = (
+    <span className="caret">
+      <FontAwesomeIcon icon="caret-down" />
+    </span>
+  );
+
+  const caretUp = (
+    <span className="caret">
+      <FontAwesomeIcon icon="caret-up" />
+    </span>
+  );
+
   useEffect(() => {
     if (allNodes) {
       nodesDispatcher({
@@ -308,8 +320,9 @@ export function ProposeCircuitForm() {
                 className="allowed-nodes-dropdown"
                 onClick={() => allowedNodesDispatch({ type: 'toggle-show' })}
               >
-              d
+
                 {Object.keys(allowedNodes.selectedNodes).join(', ')}
+                {allowedNodes.show ? caretUp : caretDown}
               </div>
               <div
                 className={
