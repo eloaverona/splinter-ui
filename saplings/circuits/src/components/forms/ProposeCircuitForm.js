@@ -137,10 +137,19 @@ const allowedNodesReducer = (state, action) => {
   }
 };
 
-const NodeItem = ({ node, onClickFn, customClass }) => {
+const checkMark = invisible => {
   return (
-    <li className={`node-item ${customClass}`}>
+    <span className={invisible ? 'selected-icon invisible' : 'selected-icon'}>
+      <FontAwesomeIcon icon="check" />
+    </span>
+  );
+};
+
+const NodeItem = ({ node, onClickFn, selected }) => {
+  return (
+    <li className="node-item">
       <button
+        className="no-style-button"
         type="button"
         onClick={() => {
           onClickFn();
@@ -149,6 +158,7 @@ const NodeItem = ({ node, onClickFn, customClass }) => {
         <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
         <span className="node-name">{node.displayName}</span>
         <span className="node-id">{node.identity}</span>
+        {checkMark(!selected)}
       </button>
     </li>
   );
@@ -157,42 +167,11 @@ const NodeItem = ({ node, onClickFn, customClass }) => {
 NodeItem.propTypes = {
   node: PropTypes.instanceOf(Node).isRequired,
   onClickFn: PropTypes.func.isRequired,
-  customClass: PropTypes.string
+  selected: PropTypes.bool
 };
 
 NodeItem.defaultProps = {
-  customClass: ''
-};
-
-const NodeList = ({ nodes, onClickFn }) => {
-  return (
-    <ul className="nodes-list">
-      {nodes.map(node => (
-        <li className={"node-item"}>
-          <button
-            type="button"
-            onClick={() => {
-              onClickFn(node);
-            }}
-          >
-            <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
-            <span className="node-name">{node.displayName}</span>
-            <span className="node-id">{node.identity}</span>
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-NodeList.propTypes = {
-  nodes: PropTypes.arrayOf(Node).isRequired,
-  onClickFn: PropTypes.func.isRequired,
-  nodeItemClass: PropTypes.string
-};
-
-NodeList.defaultProps = {
-  nodeItemClass: ''
+  selected: false
 };
 
 export function ProposeCircuitForm() {
@@ -311,15 +290,19 @@ export function ProposeCircuitForm() {
                   New node
                 </button>
               </div>
-              <NodeList
-                nodes={nodesState.filteredNodes.nodes}
-                onClickFn={node => {
-                  nodesDispatcher({
-                    type: 'select',
-                    node
-                  });
-                }}
-              />
+              <ul className="nodes-list">
+                {nodesState.filteredNodes.nodes.map(node => (
+                  <NodeItem
+                    node={node}
+                    onClickFn={() => {
+                      nodesDispatcher({
+                        type: 'select',
+                        node
+                      });
+                    }}
+                  />
+                ))}
+              </ul>
             </div>
           </div>
           <OverlayModal open={modalActive}>
@@ -348,14 +331,14 @@ export function ProposeCircuitForm() {
             </div>
             <div className="input-wrapper span-col-2">
               <div className="label">Allowed nodes</div>
-              <div
-                className="allowed-nodes-dropdown"
+              <button
+                type="button"
+                className="allowed-nodes-dropdown no-style-button"
                 onClick={() => allowedNodesDispatch({ type: 'toggle-show' })}
               >
-
                 {Object.keys(allowedNodes.selectedNodes).join(', ')}
                 {allowedNodes.show ? caretUp : caretDown}
-              </div>
+              </button>
               <div
                 className={
                   allowedNodes.show
@@ -367,11 +350,7 @@ export function ProposeCircuitForm() {
                   {nodesState.selectedNodes.map(node => (
                     <NodeItem
                       node={node}
-                      customClass={
-                        allowedNodes.selectedNodes[node.identity]
-                          ? 'selected'
-                          : ''
-                      }
+                      selected={allowedNodes.selectedNodes[node.identity]}
                       onClickFn={() => {
                         allowedNodesDispatch({ type: 'toggle-select', node });
                       }}
