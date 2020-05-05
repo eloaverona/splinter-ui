@@ -137,6 +137,33 @@ const allowedNodesReducer = (state, action) => {
   }
 };
 
+const NodeItem = ({ node, onClickFn, customClass }) => {
+  return (
+    <li className={`node-item ${customClass}`}>
+      <button
+        type="button"
+        onClick={() => {
+          onClickFn();
+        }}
+      >
+        <img src={nodeIcon} className="node-icon" alt="Icon for a node" />
+        <span className="node-name">{node.displayName}</span>
+        <span className="node-id">{node.identity}</span>
+      </button>
+    </li>
+  );
+};
+
+NodeItem.propTypes = {
+  node: PropTypes.instanceOf(Node).isRequired,
+  onClickFn: PropTypes.func.isRequired,
+  customClass: PropTypes.string
+};
+
+NodeItem.defaultProps = {
+  customClass: ''
+};
+
 const NodeList = ({ nodes, onClickFn }) => {
   return (
     <ul className="nodes-list">
@@ -336,12 +363,21 @@ export function ProposeCircuitForm() {
                     : 'allowed-nodes-list hide'
                 }
               >
-                <NodeList
-                  nodes={nodesState.selectedNodes}
-                  onClickFn={node => {
-                    allowedNodesDispatch({ type: 'toggle-select', node });
-                  }}
-                />
+                <ul className="nodes-list margin-0">
+                  {nodesState.selectedNodes.map(node => (
+                    <NodeItem
+                      node={node}
+                      customClass={
+                        allowedNodes.selectedNodes[node.identity]
+                          ? 'selected'
+                          : ''
+                      }
+                      onClickFn={() => {
+                        allowedNodesDispatch({ type: 'toggle-select', node });
+                      }}
+                    />
+                  ))}
+                </ul>
               </div>
               <div className="form-error">{}</div>
             </div>
