@@ -25,7 +25,7 @@ import { Node } from '../../data/nodeRegistry';
 import nodeIcon from '../../images/node_icon.svg';
 import { OverlayModal } from '../OverlayModal';
 import { NewNodeForm } from './NewNodeForm';
-
+import mockNodes from '../../mockData/nodes';
 import { Chip, Chips } from '../Chips';
 
 import './ProposeCircuitForm.scss';
@@ -137,12 +137,11 @@ const allowedNodesReducer = (state, action) => {
   }
 };
 
-
-const NodeItem = ({ nodes, onClickFn }) => {
+const NodeList = ({ nodes, onClickFn }) => {
   return (
     <ul className="nodes-list">
       {nodes.map(node => (
-        <li className="node-item">
+        <li className={"node-item"}>
           <button
             type="button"
             onClick={() => {
@@ -159,9 +158,14 @@ const NodeItem = ({ nodes, onClickFn }) => {
   );
 };
 
-NodeItem.propTypes = {
+NodeList.propTypes = {
   nodes: PropTypes.arrayOf(Node).isRequired,
-  onClickFn: PropTypes.func.isRequired
+  onClickFn: PropTypes.func.isRequired,
+  nodeItemClass: PropTypes.string
+};
+
+NodeList.defaultProps = {
+  nodeItemClass: ''
 };
 
 export function ProposeCircuitForm() {
@@ -208,6 +212,7 @@ export function ProposeCircuitForm() {
 
   useEffect(() => {
     if (allNodes) {
+      allNodes.push(...mockNodes);
       nodesDispatcher({
         type: 'set',
         nodes: allNodes
@@ -279,7 +284,7 @@ export function ProposeCircuitForm() {
                   New node
                 </button>
               </div>
-              <NodeItem
+              <NodeList
                 nodes={nodesState.filteredNodes.nodes}
                 onClickFn={node => {
                   nodesDispatcher({
@@ -331,7 +336,7 @@ export function ProposeCircuitForm() {
                     : 'allowed-nodes-list hide'
                 }
               >
-                <NodeItem
+                <NodeList
                   nodes={nodesState.selectedNodes}
                   onClickFn={node => {
                     allowedNodesDispatch({ type: 'toggle-select', node });
