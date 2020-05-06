@@ -56,28 +56,14 @@
     }
 
     .input-wrapper {
-      .minus-button {
+      .remove-button {
         visibility: hidden;
-        color: var(--color-attention);
       }
        &:hover {
-        .minus-button {
+        .remove-button {
           visibility: visible;
         }
       }
-      .plus-button {
-        color: var(--color-primary-light);
-      }
-    }
-
-    .minus-button, .plus-button {
-      padding: 0;
-      border: 0;
-      outline: none;
-      height: fit-content;
-      cursor: pointer;
-      margin-left: 0.5rem;
-      background-color: transparent;
     }
 
     input {

@@ -27,7 +27,7 @@ import { OverlayModal } from '../OverlayModal';
 import { NewNodeForm } from './NewNodeForm';
 import mockNodes from '../../mockData/nodes';
 import { Chip, Chips } from '../Chips';
-
+import { AddButton, RemoveButton } from '../AddRemoveButtons';
 import './ProposeCircuitForm.scss';
 
 const filterNodes = (nodes, input) => {
@@ -120,7 +120,7 @@ const allowedNodesReducer = (state, action) => {
 
   switch (action.type) {
     case 'toggle-show': {
-      return { ...state, show: !state.show }
+      return { ...state, show: !state.show };
     }
     case 'toggle-select': {
       const { node } = action;
@@ -174,6 +174,63 @@ NodeItem.defaultProps = {
   selected: false
 };
 
+const serviceArgumentsReducer = (state, action) => {
+  switch (action.type) {
+    case 'add-field': {
+      state.arguments.push({
+        key: '',
+        value: ''
+      });
+      return { ...state };
+    }
+    case 'remove-field': {
+      const { index } = action;
+      state.arguments.splice(index, 1);
+      return { ...state };
+    }
+    case 'set-field-key': {
+      const newState = state;
+      const { key, index } = action;
+      newState.arguments[index].key = key;
+      if (key.length !== 0) {
+        delete newState.errors[index];
+      }
+
+      if (key.length === 0 && newState.arguments[index].value.length !== 0) {
+        const error = 'Key cannot be empty';
+        newState.errors[index] = error;
+      }
+
+      return { ...newState };
+    }
+    case 'set-field-value': {
+      const newState = state;
+      const { value, index } = action;
+      newState.arguments[index].value = value;
+      if (newState.arguments[index].key.length === 0 && value.length !== 0) {
+        const error = 'Key cannot be empty';
+        newState.errors[index] = error;
+      } else {
+        delete newState.errors[index];
+      }
+      return { ...newState };
+    }
+    case 'clear': {
+      return {
+        arguments: [
+          {
+            key: '',
+            value: ''
+          }
+        ],
+        errors: {}
+      };
+    }
+    default:
+      throw new Error(`unhandled action type: ${action.type}`);
+  }
+};
+
 export function ProposeCircuitForm() {
   const allNodes = useNodeRegistryState();
   const localNodeID = useLocalNodeState();
@@ -189,6 +246,19 @@ export function ProposeCircuitForm() {
     error: ''
   });
 
+  const [serviceArgumentsState, serviceArgumentsDispatcher] = useReducer(
+    serviceArgumentsReducer,
+    {
+      arguments: [
+        {
+          key: '',
+          value: ''
+        }
+      ],
+      errors: {}
+    }
+  );
+
   const [allowedNodes, allowedNodesDispatch] = useReducer(allowedNodesReducer, {
     show: false,
     selectedNodes: {}
@@ -196,6 +266,63 @@ export function ProposeCircuitForm() {
 
   const nodesAreValid = () => {
     return nodesState.selectedNodes.length >= 2;
+  };
+
+  const serviceArgumentsField = () => {
+    return serviceArgumentsState.arguments.map((metada, i) => {
+      const { key, value } = metada;
+
+      return (
+        <div className="input-wrapper">
+          <input
+            type="text"
+            name="key"
+            value={key}
+            placeholder="Key"
+            onChange={e => {
+              const input = e.target.value;
+              serviceArgumentsDispatcher({
+                type: 'set-field-key',
+                key: input,
+                index: i
+              });
+            }}
+          />
+          <input
+            type="text"
+            name="value"
+            value={value}
+            placeholder="Value"
+            onChange={e => {
+              const input = e.target.value;
+              serviceArgumentsDispatcher({
+                type: 'set-field-value',
+                value: input,
+                index: i
+              });
+            }}
+          />
+          <AddButton
+            actionFn={() => {
+              serviceArgumentsDispatcher({
+                type: 'add-field'
+              });
+            }}
+            display={i === serviceArgumentsState.arguments.length - 1}
+          />
+          <RemoveButton
+            actionFn={() => {
+              serviceArgumentsDispatcher({
+                type: 'remove-field',
+                index: i
+              });
+            }}
+            display={i > 0}
+          />
+          <div className="form-error">{serviceArgumentsState.errors[i]}</div>
+        </div>
+      );
+    });
   };
 
   const plusSign = (
@@ -359,6 +486,9 @@ export function ProposeCircuitForm() {
                 </ul>
               </div>
               <div className="form-error">{}</div>
+            </div>
+            <div className="input-wrapper span-col-2">
+              {serviceArgumentsField()}
             </div>
           </div>
         </Step>

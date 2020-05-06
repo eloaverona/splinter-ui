@@ -20,61 +20,9 @@ import { useToasts } from 'react-toast-notifications';
 import PropTypes from 'prop-types';
 import { postNodeRegistry } from '../../api/splinter';
 import { Node } from '../../data/nodeRegistry';
+import { AddButton, RemoveButton } from '../AddRemoveButtons';
 
 import './NewNodeForm.scss';
-
-const PlusButton = ({ actionFn, display }) => {
-  if (!display) {
-    return '';
-  }
-
-  const plusSign = (
-    <span className="sign plus">
-      <FontAwesomeIcon icon="plus-circle" />
-    </span>
-  );
-
-  return (
-    <button type="button" className="plus-button" onClick={actionFn}>
-      {plusSign}
-    </button>
-  );
-};
-
-PlusButton.propTypes = {
-  actionFn: PropTypes.func.isRequired,
-  display: PropTypes.bool
-};
-
-PlusButton.defaultProps = {
-  display: false
-};
-
-const MinusButton = ({ actionFn, display }) => {
-  if (!display) {
-    return '';
-  }
-  const minusSign = (
-    <span className="sign minus">
-      <FontAwesomeIcon icon="minus-circle" />
-    </span>
-  );
-
-  return (
-    <button className="minus-button" type="button" onClick={actionFn}>
-      {minusSign}
-    </button>
-  );
-};
-
-MinusButton.propTypes = {
-  actionFn: PropTypes.func.isRequired,
-  display: PropTypes.bool
-};
-
-MinusButton.defaultProps = {
-  display: false
-};
 
 const endpointsReducer = (state, action) => {
   switch (action.type) {
@@ -304,7 +252,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
               });
             }}
           />
-          <PlusButton
+          <AddButton
             actionFn={() => {
               endpointsDispatcher({
                 type: 'add-field'
@@ -312,7 +260,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i === endpointState.endpoints.length - 1}
           />
-          <MinusButton
+          <RemoveButton
             actionFn={() => {
               endpointsDispatcher({
                 type: 'remove-field',
@@ -346,7 +294,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
               });
             }}
           />
-          <PlusButton
+          <AddButton
             actionFn={() => {
               keysDispatcher({
                 type: 'add-field'
@@ -354,7 +302,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i === keysState.keys.length - 1}
           />
-          <MinusButton
+          <RemoveButton
             actionFn={() => {
               keysDispatcher({
                 type: 'remove-field',
@@ -403,7 +351,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
               });
             }}
           />
-          <PlusButton
+          <AddButton
             actionFn={() => {
               metadataDispatcher({
                 type: 'add-field'
@@ -411,7 +359,7 @@ export function NewNodeForm({ closeFn, successCallback }) {
             }}
             display={i === metadataState.metadata.length - 1}
           />
-          <MinusButton
+          <RemoveButton
             actionFn={() => {
               metadataDispatcher({
                 type: 'remove-field',
