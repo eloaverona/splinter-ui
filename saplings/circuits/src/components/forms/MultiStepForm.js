@@ -59,9 +59,6 @@ export function MultiStepForm({
         <h5>{formName}</h5>
         <div className="info">
           <div className="step-counter">
-            <span className="completion-percentage">
-              {`${((step - 1) / (children.length - 1)) * 100}%`}
-            </span>
             <div
               className="progress-tracker"
               style={{
