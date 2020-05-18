@@ -260,9 +260,14 @@
               min-height: 2rem;
               display: inline;
 
+              .step-label {
+                display: block;
+                padding: 0;
+              }
                &:not(.active) {
                 display: none;
               }
+
               &.active {
                 .step-label {
                   width: 100% !important;
