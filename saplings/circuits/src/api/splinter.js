@@ -30,7 +30,7 @@ export const getNodeID = async () => {
 };
 
 export const getNodeRegistry = async () => {
-  const result = await get(`${splinterURL}/admin/nodes`);
+  const result = await get(`${splinterURL}/registry/nodes`);
 
   if (result.ok) {
     const response = new NodeRegistryResponse(result.json);
@@ -45,7 +45,7 @@ export const postNodeRegistry = async node => {
   };
 
   const result = await post(
-    `${splinterURL}/admin/nodes`,
+    `${splinterURL}/registry/nodes`,
     JSON.stringify(node),
     setHeader
   );

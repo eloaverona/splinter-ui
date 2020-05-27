@@ -161,7 +161,11 @@ export function ProposeCircuitForm() {
       handleSubmit={() => {}}
       disabled={!nodesAreValid()}
     >
-      <Step step={1} label="Add Nodes">
+      <Step step={1} label="Add nodes">
+        <div className="step-title">Add nodes</div>
+        <div className="help-text">
+          Select the nodes that are part of the circuit{' '}
+        </div>
         <div className="node-registry-wrapper">
           <div className="selected-nodes-header">
             <div className="title">Selected nodes</div>
