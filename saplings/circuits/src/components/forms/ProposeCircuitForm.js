@@ -21,6 +21,8 @@ import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
 
 import nodeIcon from '../../images/node_icon.svg';
+import NodeCard from '../NodeCard';
+
 import { OverlayModal } from '../OverlayModal';
 import { NewNodeForm } from './NewNodeForm';
 
@@ -55,13 +57,26 @@ const nodesReducer = (state, action) => {
       };
       return { ...state, filteredNodes };
     }
-    case 'select': {
+    case 'toggleSelect': {
       const { node } = action;
-      state.selectedNodes.push(node);
-      const availableNodes = state.availableNodes.filter(
-        item => item.identity !== node.identity
+      let alreadySelected = false;
+
+      const selectedNodes = state.selectedNodes.filter(selectedNode => {
+        if (node.identity === selectedNode.identity) {
+          alreadySelected = true;
+          return false;
+        }
+        return true;
+      });
+
+      if (!alreadySelected) {
+        selectedNodes.push(node);
+      }
+
+      const nodes = filterNodes(
+        state.availableNodes,
+        state.filteredNodes.filteredBy
       );
-      const nodes = filterNodes(availableNodes, state.filteredNodes.filteredBy);
       const filteredNodes = {
         nodes,
         filteredBy: state.filteredNodes.filteredBy
@@ -72,14 +87,14 @@ const nodesReducer = (state, action) => {
         error = '';
       }
 
-      return { ...state, availableNodes, filteredNodes, error };
+      return { ...state, selectedNodes, filteredNodes, error };
     }
     case 'removeSelect': {
       const { node } = action;
       const selectedNodes = state.selectedNodes.filter(
         item => item.identity !== node.identity
       );
-      state.availableNodes.push(node);
+
       const nodes = filterNodes(
         state.availableNodes,
         state.filteredNodes.filteredBy
@@ -149,7 +164,7 @@ export function ProposeCircuitForm() {
   useEffect(() => {
     if (localNode) {
       nodesDispatcher({
-        type: 'select',
+        type: 'toggleSelect',
         node: localNode
       });
     }
@@ -164,7 +179,7 @@ export function ProposeCircuitForm() {
       <Step step={1} label="Add nodes">
         <div className="step-title">Add nodes</div>
         <div className="help-text">
-          Select the nodes that are part of the circuit{' '}
+          Select the nodes that are part of the circuit
         </div>
         <div className="node-registry-wrapper">
           <div className="selected-nodes-header">
@@ -214,27 +229,28 @@ export function ProposeCircuitForm() {
               </button>
             </div>
             <ul>
-              {nodesState.filteredNodes.nodes.map(node => (
-                <li className="node-item">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      nodesDispatcher({
-                        type: 'select',
-                        node
-                      });
-                    }}
-                  >
-                    <img
-                      src={nodeIcon}
-                      className="node-icon"
-                      alt="Icon for a node"
+              {nodesState.filteredNodes.nodes.map(node => {
+                const local = node.identity === localNodeID;
+                const selected =
+                  nodesState.selectedNodes.filter(selectedNode => {
+                    return node.identity === selectedNode.identity;
+                  }).length > 0;
+                return (
+                  <li className="node-item">
+                    <NodeCard
+                      node={node}
+                      dispatcher={targetNode => {
+                        nodesDispatcher({
+                          type: 'toggleSelect',
+                          node: targetNode
+                        });
+                      }}
+                      isLocal={local}
+                      selected={selected}
                     />
-                    <span className="node-name">{node.displayName}</span>
-                    <span className="node-id">{node.identity}</span>
-                  </button>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -243,7 +259,7 @@ export function ProposeCircuitForm() {
             closeFn={() => setModalActive(false)}
             successCallback={node => {
               nodesDispatcher({
-                type: 'select',
+                type: 'toggleSelect',
                 node
               });
             }}
