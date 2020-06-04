@@ -30,9 +30,18 @@ import { Chip, Chips } from '../Chips';
 
 import './ProposeCircuitForm.scss';
 
-const filterNodes = (nodes, input) => {
-  const filteredNodes = nodes.filter(node => {
+const filterNodes = (state, input) => {
+  const filteredNodes = state.availableNodes.filter(node => {
     if (node.identity.toLowerCase().indexOf(input) > -1) {
+      if (state.showSelectedOnly) {
+        const isSelected =
+          state.selectedNodes.filter(
+            selectedNode => node.identity === selectedNode.identity
+          ).length > 0;
+        if (!isSelected) {
+          return false;
+        }
+      }
       return true;
     }
     if (node.displayName.toLowerCase().indexOf(input) > -1) {
@@ -50,12 +59,32 @@ const nodesReducer = (state, action) => {
 
   switch (action.type) {
     case 'filter': {
-      const nodes = filterNodes(state.availableNodes, action.input);
+      const nodes = filterNodes(state, action.input);
       const filteredNodes = {
         nodes,
         filteredBy: action.input
       };
       return { ...state, filteredNodes };
+    }
+    case 'showSelectedOnly': {
+      const newState = state;
+      newState.showSelectedOnly = true;
+      const nodes = filterNodes(state, state.filteredNodes.filteredBy);
+      const filteredNodes = {
+        nodes,
+        filteredBy: state.filteredNodes.filteredBy
+      };
+      return { ...newState, filteredNodes };
+    }
+    case 'showAllNodes': {
+      const newState = state;
+      newState.showSelectedOnly = false;
+      const nodes = filterNodes(state, state.filteredNodes.filteredBy);
+      const filteredNodes = {
+        nodes,
+        filteredBy: state.filteredNodes.filteredBy
+      };
+      return { ...newState, filteredNodes };
     }
     case 'toggleSelect': {
       const { node } = action;
@@ -73,10 +102,7 @@ const nodesReducer = (state, action) => {
         selectedNodes.push(node);
       }
 
-      const nodes = filterNodes(
-        state.availableNodes,
-        state.filteredNodes.filteredBy
-      );
+      const nodes = filterNodes(state, state.filteredNodes.filteredBy);
       const filteredNodes = {
         nodes,
         filteredBy: state.filteredNodes.filteredBy
@@ -95,10 +121,7 @@ const nodesReducer = (state, action) => {
         item => item.identity !== node.identity
       );
 
-      const nodes = filterNodes(
-        state.availableNodes,
-        state.filteredNodes.filteredBy
-      );
+      const nodes = filterNodes(state, state.filteredNodes.filteredBy);
       const filteredNodes = {
         nodes,
         filteredBy: state.filteredNodes.filteredBy
@@ -135,6 +158,7 @@ export function ProposeCircuitForm() {
   const [nodesState, nodesDispatcher] = useReducer(nodesReducer, {
     selectedNodes: [],
     availableNodes: [],
+    showSelectedOnly: false,
     filteredNodes: {
       nodes: [],
       filteredBy: ''
@@ -208,9 +232,16 @@ export function ProposeCircuitForm() {
               <div className="title-wrapper">
                 <div>
                   Show:
-                  <span>{`All nodes (${nodesState.availableNodes.length})`}</span>
+                  <span
+                    onClick={() => nodesDispatcher({ type: 'showAllNodes' })}
+                    >
+                    {`All nodes (${nodesState.availableNodes.length})`}</span>
                   <span>|</span>
-                  <span>{`Selected nodes (${nodesState.selectedNodes.length})`}</span>
+                  <span
+                    onClick={() => nodesDispatcher({ type: 'showSelectedOnly' })}
+                  >
+                    {`Selected nodes (${nodesState.selectedNodes.length})`}
+                  </span>
                 </div>
                 <input
                   type="text"
@@ -224,14 +255,6 @@ export function ProposeCircuitForm() {
                   }}
                 />
               </div>
-              <button
-                type="button"
-                className="new-node-button"
-                onClick={() => setModalActive(true)}
-              >
-                {plusSign}
-                New node
-              </button>
             </div>
             <ul>
               {nodesState.filteredNodes.nodes.map(node => {
