@@ -206,7 +206,12 @@ export function ProposeCircuitForm() {
           <div className="available-nodes">
             <div className="available-nodes-header">
               <div className="title-wrapper">
-                <div className="title">Available nodes</div>
+                <div>
+                  Show:
+                  <span>{`All nodes (${nodesState.availableNodes.length})`}</span>
+                  <span>|</span>
+                  <span>{`Selected nodes (${nodesState.selectedNodes.length})`}</span>
+                </div>
                 <input
                   type="text"
                   placeholder="Filter"
