@@ -232,16 +232,30 @@ export function ProposeCircuitForm() {
               <div className="title-wrapper">
                 <div>
                   Show:
-                  <span
+                  <button
+                    type="button"
+                    className={
+                      nodesState.showSelectedOnly
+                        ? 'no-style-btn'
+                        : 'no-style-btn selected'
+                    }
                     onClick={() => nodesDispatcher({ type: 'showAllNodes' })}
-                    >
-                    {`All nodes (${nodesState.availableNodes.length})`}</span>
+                  >
+                    {`All nodes (${nodesState.availableNodes.length})`}
+                  </button>
                   <span>|</span>
-                  <span
-                    onClick={() => nodesDispatcher({ type: 'showSelectedOnly' })}
+                  <button
+                    type="button"
+                    className={
+                      nodesState.showSelectedOnly
+                        ? 'no-style-btn selected'
+                        : 'no-style-btn'
+                    }
+                    onClick={() =>
+                      nodesDispatcher({ type: 'showSelectedOnly' })}
                   >
                     {`Selected nodes (${nodesState.selectedNodes.length})`}
-                  </span>
+                  </button>
                 </div>
                 <input
                   type="text"
