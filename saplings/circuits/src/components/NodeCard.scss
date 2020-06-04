@@ -21,6 +21,11 @@
     visibility: hidden;
   }
 
+  .col-span-4 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+
   .node-description {
     display: grid;
     grid-template-columns: repeat(4,1fr);
@@ -83,6 +88,24 @@
         &:enabled  {
           cursor: pointer;
         }
+      }
+    }
+
+    .metadata {
+      margin-top: 0.5rem;
+
+      .metadata-chip {
+        border: 1px solid var(--color-light-grey);
+        width: fit-content;
+        border-radius: 0.2rem;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--color-grey);
+        border-left: 0.3rem solid var(--color-light-grey);
+
+       &::first-letter {
+         text-transform:capitalize;
+       }
       }
     }
   }

@@ -50,7 +50,7 @@ const NodeCard = ({ node, dispatcher, isLocal, selected }) => {
             )}
           </button>
         </div>
-        <div className="metadata">
+        <div className="metadata col-span-4">
           {Object.entries(node.metadata).map(([key, value]) => (
             <div className="metadata-chip">{`${key}: ${value}`}</div>
           ))}
