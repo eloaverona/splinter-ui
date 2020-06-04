@@ -17,6 +17,10 @@
 .node-card {
   padding: 1rem;
 
+  .not-visible {
+    visibility: hidden;
+  }
+
   .node-description {
     display: grid;
     grid-template-columns: repeat(4,1fr);
@@ -38,6 +42,7 @@
     .node-labels {
       display: flex;
       flex-direction: column;
+      align-items: center;
 
       .node-local {
         border-radius: 1rem;
@@ -63,13 +68,22 @@
         color: #555;
         transition: all 0.3s;
         outline: none;
+        margin-top: 0.5rem;
+        border: none;
+        background-color: var(--color-light-grey);
+
+        &.selected {
+          background-color: var(--color-primary-light);
+        }
+
+        .check-mark {
+          color: var(--color-text-light-on-dark);
+        }
 
         &:enabled  {
           cursor: pointer;
         }
       }
-
-
     }
   }
 }

@@ -38,14 +38,16 @@ const NodeCard = ({ node, dispatcher, isLocal, selected }) => {
           })}
         </div>
         <div className="node-labels">
-          <div className={isLocal ? 'node-local' : 'hide'}>Local</div>
+          <div className={isLocal ? 'node-local' : 'not-visible'}>Local</div>
           <button
             type="button"
-            className="select-box"
+            className={selected ? 'select-box selected' : 'select-box'}
             onClick={() => dispatcher(node)}
             disabled={isLocal}
           >
-            {selected && <FontAwesomeIcon icon="check" />}
+            {selected && (
+              <FontAwesomeIcon icon="check" className="check-mark" />
+            )}
           </button>
         </div>
       </div>
