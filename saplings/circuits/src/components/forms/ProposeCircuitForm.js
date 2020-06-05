@@ -202,31 +202,35 @@ export function ProposeCircuitForm() {
       disabled={!nodesAreValid()}
     >
       <Step step={1} label="Add nodes">
-        <div className="step-title">Add nodes</div>
-        <div className="help-text">
-          Select the nodes that are part of the circuit
+        <div className="step-header">
+          <div className="step-title">Add nodes</div>
+          <div className="help-text">
+            Select the nodes that are part of the circuit
+          </div>
         </div>
         <div className="node-registry-wrapper">
-          <div className="selected-nodes-header">
-            <div className="title">Selected nodes</div>
-          </div>
-          <div className="form-error">{nodesState.error}</div>
-          <div className="selected-nodes">
-            <Chips>
-              {nodesState.selectedNodes.map(node => {
-                const local = node.identity === localNodeID;
-                return (
-                  <Chip
-                    node={node}
-                    isLocal={local}
-                    deleteable={!local}
-                    removeFn={() => {
-                      nodesDispatcher({ type: 'removeSelect', node });
-                    }}
-                  />
-                );
-              })}
-            </Chips>
+          <div className="selected-nodes-wrapper">
+            <div className="selected-nodes-header">
+              <div className="title">Selected nodes</div>
+            </div>
+            <div className="form-error">{nodesState.error}</div>
+            <div className="selected-nodes">
+              <Chips>
+                {nodesState.selectedNodes.map(node => {
+                  const local = node.identity === localNodeID;
+                  return (
+                    <Chip
+                      node={node}
+                      isLocal={local}
+                      deleteable={!local}
+                      removeFn={() => {
+                        nodesDispatcher({ type: 'removeSelect', node });
+                      }}
+                    />
+                  );
+                })}
+              </Chips>
+            </div>
           </div>
           <div className="available-nodes">
             <div className="available-nodes-header">
