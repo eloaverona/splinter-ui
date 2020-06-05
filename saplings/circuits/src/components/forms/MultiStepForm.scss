@@ -149,7 +149,7 @@
   .form-wrapper {
     display: flex;
     flex-direction: column;
-    // height: 100%;
+    height: 100%;
     flex: 0 1 100%;
     align-items: center;
     justify-content: space-between;
@@ -160,12 +160,13 @@
       flex: 0 1 100%;
       width: 100%;
       padding: 0 5%;
-      overflow-y: auto;
+      height: 80%;
 
       .step {
         display: flex;
         flex-direction: column;
         margin-top: 2rem;
+        height: 100%;
       }
 
       .form-group {
@@ -192,6 +193,7 @@
     .actions {
       display: flex;
       width: 90%;
+      height: 20%;
       flex-direction: row;
       justify-content: flex-end;
       padding: 1.5rem 0;

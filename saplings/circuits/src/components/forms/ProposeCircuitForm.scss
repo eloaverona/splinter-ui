@@ -28,6 +28,7 @@
 .node-registry-wrapper {
   display: flex;
   flex-direction: column;
+  height: 90%;
 
   .title {
     font-size: 1rem;
@@ -56,7 +57,7 @@
 
   .available-nodes {
     width: 100%;
-    max-height: 50%;
+    height: 50%;
 
     .available-nodes-header {
       display: flex;
@@ -133,6 +134,7 @@
       padding: 0;
       height: 100%;
       border-top: 1px solid var(--color-light-grey);
+      overflow-y: auto;
 
       .node-item {
         display: flex;
