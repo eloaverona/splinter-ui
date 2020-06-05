@@ -65,6 +65,14 @@
       align-items: baseline;
       margin: 1rem 0 0.5rem;
 
+      .select-filter {
+        font-size: 0.8rem;
+
+        .filter-separator {
+          font-size: 1rem;
+        }
+      }
+
       .no-style-btn {
         background: none;
         border: none;
@@ -72,7 +80,7 @@
         cursor: pointer;
         text-align: left;
         padding: 1rem;
-        font-size: 0.7;
+        font-size: 0.8rem;
 
         &.selected {
           color: var(--color-primary)

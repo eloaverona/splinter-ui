@@ -20,7 +20,7 @@ import { MultiStepForm, Step } from './MultiStepForm';
 import { useNodeRegistryState } from '../../state/nodeRegistry';
 import { useLocalNodeState } from '../../state/localNode';
 
-import nodeIcon from '../../images/node_icon.svg';
+import mockNodes from '../../mockData/nodes';
 import NodeCard from '../NodeCard';
 
 import { OverlayModal } from '../OverlayModal';
@@ -178,6 +178,7 @@ export function ProposeCircuitForm() {
 
   useEffect(() => {
     if (allNodes) {
+      allNodes.push(...mockNodes);
       nodesDispatcher({
         type: 'set',
         nodes: allNodes
@@ -229,46 +230,43 @@ export function ProposeCircuitForm() {
           </div>
           <div className="available-nodes">
             <div className="available-nodes-header">
-              <div className="title-wrapper">
-                <div>
-                  Show:
-                  <button
-                    type="button"
-                    className={
-                      nodesState.showSelectedOnly
-                        ? 'no-style-btn'
-                        : 'no-style-btn selected'
-                    }
-                    onClick={() => nodesDispatcher({ type: 'showAllNodes' })}
-                  >
-                    {`All nodes (${nodesState.availableNodes.length})`}
-                  </button>
-                  <span>|</span>
-                  <button
-                    type="button"
-                    className={
-                      nodesState.showSelectedOnly
-                        ? 'no-style-btn selected'
-                        : 'no-style-btn'
-                    }
-                    onClick={() =>
-                      nodesDispatcher({ type: 'showSelectedOnly' })}
-                  >
-                    {`Selected nodes (${nodesState.selectedNodes.length})`}
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Filter"
-                  className="search-nodes-input"
-                  onKeyUp={event => {
-                    nodesDispatcher({
-                      type: 'filter',
-                      input: event.target.value.toLowerCase()
-                    });
-                  }}
-                />
+              <div className="select-filter">
+                Show:
+                <button
+                  type="button"
+                  className={
+                    nodesState.showSelectedOnly
+                      ? 'no-style-btn'
+                      : 'no-style-btn selected'
+                  }
+                  onClick={() => nodesDispatcher({ type: 'showAllNodes' })}
+                >
+                  {`All nodes (${nodesState.availableNodes.length})`}
+                </button>
+                <span className="filter-separator">|</span>
+                <button
+                  type="button"
+                  className={
+                    nodesState.showSelectedOnly
+                      ? 'no-style-btn selected'
+                      : 'no-style-btn'
+                  }
+                  onClick={() => nodesDispatcher({ type: 'showSelectedOnly' })}
+                >
+                  {`Selected nodes (${nodesState.selectedNodes.length})`}
+                </button>
               </div>
+              <input
+                type="text"
+                placeholder="Filter"
+                className="search-nodes-input"
+                onKeyUp={event => {
+                  nodesDispatcher({
+                    type: 'filter',
+                    input: event.target.value.toLowerCase()
+                  });
+                }}
+              />
             </div>
             <ul>
               {nodesState.filteredNodes.nodes.map(node => {
