@@ -33,9 +33,11 @@ const NodeCard = ({ node, dispatcher, isLocal, selected }) => {
         </div>
         <div className="field-wrapper">
           <div className="field-header">Endpoints</div>
-          {node.endpoints.map(endpoint => {
-            return <div className="field-value">{endpoint}</div>;
-          })}
+          <div className='endpoints'>
+            {node.endpoints.map(endpoint => {
+              return <div className="field-value">{endpoint}</div>;
+            })}
+          </div>
         </div>
         <div className="node-labels">
           <div className={isLocal ? 'node-local' : 'not-visible'}>Local</div>

@@ -45,6 +45,12 @@
         font-weight: bold;
       }
     }
+
+    .endpoints {
+      overflow-y: scroll;
+      height: 4rem;
+    }
+
     .node-labels {
       display: flex;
       flex-direction: column;
