@@ -109,8 +109,10 @@ const nodesReducer = (state, action) => {
       };
 
       let { error } = state;
-      if (state.selectedNodes.length >= 2) {
+      if (selectedNodes.length >= 2 || action.skipValidation) {
         error = '';
+      } else {
+        error = errorMessage;
       }
 
       return { ...state, selectedNodes, filteredNodes, error };
@@ -190,7 +192,8 @@ export function ProposeCircuitForm() {
     if (localNode) {
       nodesDispatcher({
         type: 'toggleSelect',
-        node: localNode
+        node: localNode,
+        skipValidation: true
       });
     }
   }, [localNode]);
