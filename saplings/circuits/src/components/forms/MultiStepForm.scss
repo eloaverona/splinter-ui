@@ -54,6 +54,7 @@
       .step-counter {
         width: 100%;
         height: 100%;
+        display: flex;
 
         .completion-percentage {
           display: none;
@@ -66,17 +67,13 @@
           height: 100%;
           width: 1.5px;
           background: #555555;
-          position: relative;
-          top: 0;
-          left: 0.75rem;
-          transform: translateX(-50%);
+          margin-left: 0.75rem;
 
           &:after {
             display: block;
             content: '';
             height: var(--form-progress);
             width: 3px;
-            transform: translateX(-50%);
             background: var(--color-primary);
             transition: height 1s;
           }
@@ -87,7 +84,8 @@
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          transform: translateY(-100%);
+          margin-left: -0.8rem;
+
 
           .step {
             display: flex;
