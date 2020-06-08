@@ -94,12 +94,18 @@
 
     .metadata {
       margin-top: 0.5rem;
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      width: 100%;
 
       .metadata-chip {
         border: 1px solid var(--color-light-grey);
         width: fit-content;
         border-radius: 0.2rem;
         padding: 0.5rem;
+        margin-right: 0.3rem;
+        white-space: nowrap;
         font-size: 0.8rem;
         color: var(--color-grey);
         border-left: 0.3rem solid var(--color-light-grey);
