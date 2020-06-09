@@ -230,9 +230,16 @@
       flex-direction: column;
       padding: 1rem !important;
       width: 100%;
+      height: 35%;
+
+      > h5{
+        margin: 0 0 0.5rem;
+      }
 
       .info {
         flex-direction: row;
+        padding-top: 0.3rem;
+        overflow-y: hidden;
 
         .step-counter {
           display: inline;
@@ -285,24 +292,6 @@
             }
           }
         }
-      }
-    }
-  }
-}
-
-@media only screen and (max-height: 400px) {
-
-  .multi-step-form {
-    .form-header {
-      max-height: 35%;
-
-      > h5{
-        margin: 0;
-      }
-
-      .info {
-        padding-top: 0.3rem;
-        overflow-y: hidden;
       }
     }
   }
