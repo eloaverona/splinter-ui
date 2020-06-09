@@ -235,6 +235,8 @@
         flex-direction: row;
 
         .step-counter {
+          display: inline;
+
           .completion-percentage {
             display: block !important;
           }
@@ -255,6 +257,7 @@
           .steps {
             width: 100%;
             transform: none;
+            margin-left: 0;
 
             .step {
               min-height: 2rem;
