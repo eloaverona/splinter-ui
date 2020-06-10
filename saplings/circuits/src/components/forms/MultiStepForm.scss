@@ -194,8 +194,7 @@
       flex-direction: row;
       justify-content: flex-end;
       padding: 1rem 0;
-      margin-top: 0.5rem;
-      border-top: 1px solid #555555;
+      margin-top: 1rem;
 
       > * {
         margin: 0 0.5rem;
@@ -225,12 +224,22 @@
     flex-direction: column;
     align-items: center;
 
+    .form-wrapper {
+      height: 80%;
+      flex: unset;
+      width: 100%;
+
+      .form {
+        padding: 2% 0 2% 2%;
+      }
+    }
+
     .form-header {
       display: flex;
       flex-direction: column;
-      padding: 1rem !important;
+      padding-top: 1rem !important;
       width: 100%;
-      height: 35%;
+      height: 20%;
 
       > h5{
         margin: 0 0 0.5rem;

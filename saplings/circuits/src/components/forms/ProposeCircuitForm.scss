@@ -170,11 +170,18 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .available-nodes-header {
-    flex-direction: column !important;
+  .available-nodes {
+    .available-nodes-header {
+      flex-direction: column !important;
+      height: 25% !important;
 
-    .search-nodes-input {
-      margin-left: 0 !important;
-     }
+      .search-nodes-input {
+        margin-left: 0 !important;
+       }
+    }
+
+    ul {
+      height: 75%;
+    }
   }
 }
